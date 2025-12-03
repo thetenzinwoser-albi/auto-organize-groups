@@ -1,0 +1,3837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Workbook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .prototype-disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .prototype-disclaimer-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            color: #856404;
+        }
+
+        .prototype-disclaimer-content {
+            flex: 1;
+        }
+
+        .prototype-disclaimer-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 4px;
+        }
+
+        .prototype-disclaimer-text {
+            font-size: 13px;
+            color: #664d03;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        select, button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #0052a3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Main Page Tabs (Items/Orders) */
+        .main-content-wrapper {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .main-tabs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .main-tabs-header h3 {
+            font-size: 20px;
+            color: #333;
+            padding: 20px 0;
+        }
+
+        .main-tabs-nav {
+            display: flex;
+            gap: 0;
+        }
+
+        .main-tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .main-tab-btn:hover {
+            color: #0066cc;
+            background: #f5f8ff;
+        }
+
+        .main-tab-btn.active {
+            color: #0066cc;
+            border-bottom-color: #0066cc;
+        }
+
+        .main-tab-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .main-tab-content {
+            display: none;
+        }
+
+        .main-tab-content.active {
+            display: block;
+        }
+
+        /* Items Tab */
+        .items-tab-content {
+            /* Items specific content */
+        }
+
+        .tab-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tab-header h3 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        /* Orders Tab */
+        .orders-tab-content {
+            padding: 20px;
+        }
+
+        .orders-list {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .order-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .order-card:last-child {
+            border-bottom: none;
+        }
+
+        .order-card:hover {
+            background: #f5f8ff;
+        }
+
+        .order-card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .order-card-id {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .order-card-meta {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .order-card-arrow {
+            color: #999;
+            font-size: 20px;
+        }
+
+        .order-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-delete-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            color: #999;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.15s;
+        }
+
+        .order-card:hover .order-delete-btn {
+            opacity: 1;
+        }
+
+        .order-delete-btn:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+            color: #dc2626;
+        }
+
+        .order-detail-actions {
+            margin-left: auto;
+        }
+
+        .btn-delete-order {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-delete-order:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+            color: #dc2626;
+        }
+
+        .order-detail-view {
+            display: none;
+        }
+
+        .order-detail-view.active {
+            display: block;
+        }
+
+        .order-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background: #e8e8e8;
+        }
+
+        .order-detail-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .order-detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .order-detail-table thead {
+            background: #f5f5f5;
+        }
+
+        .order-detail-table th {
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .order-detail-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .order-detail-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .order-summary {
+            display: flex;
+            justify-content: flex-end;
+            gap: 30px;
+            margin-top: 16px;
+            padding: 16px 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .order-summary-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .order-summary-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .order-summary-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .empty-orders {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-orders-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-orders h4 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .filters {
+            padding: 15px 20px;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .items-table thead {
+            background: #f5f5f5;
+        }
+
+        .items-table th {
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .items-table th.sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 25px;
+        }
+
+        .items-table th.sortable:hover {
+            background: #ebebeb;
+        }
+
+        .items-table th.sortable::after {
+            content: '⇅';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 12px;
+        }
+
+        .items-table th.sortable.asc::after {
+            content: '↑';
+            color: #0066cc;
+        }
+
+        .items-table th.sortable.desc::after {
+            content: '↓';
+            color: #0066cc;
+        }
+
+        /* Column header with filter icon */
+        .items-table th.filterable {
+            position: relative;
+        }
+
+        .column-header-content {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-icon-btn {
+            background: none;
+            border: none;
+            padding: 2px;
+            cursor: pointer;
+            color: #999;
+            font-size: 14px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+        }
+
+        .filter-icon-btn:hover {
+            color: #0066cc;
+            background: #e3f2fd;
+        }
+
+        .filter-icon-btn.has-filter {
+            color: #0066cc;
+            background: #e3f2fd;
+        }
+
+        .column-header-label {
+            cursor: pointer;
+        }
+
+        .column-header-label:hover {
+            color: #0066cc;
+        }
+
+        /* Filter dropdown popover */
+        .filter-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 100;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 8px;
+            min-width: 160px;
+            margin-top: 4px;
+        }
+
+        .filter-dropdown.active {
+            display: block;
+        }
+
+        .filter-dropdown select {
+            width: 100%;
+            padding: 6px 8px;
+            font-size: 13px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .filter-dropdown select:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+
+        .filter-dropdown-header {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .items-table tr:hover {
+            background: #fafafa;
+        }
+
+        .items-table tr.selected {
+            background: #e3f2fd;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .selected-count {
+            padding: 15px 20px;
+            background: #e3f2fd;
+            border-top: 1px solid #90caf9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            color: #666;
+            font-size: 24px;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Item Filter Modal */
+        .item-filter-modal {
+            max-width: 600px;
+        }
+
+        .item-filter-search {
+            margin-bottom: 20px;
+        }
+
+        .item-filter-search input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .item-filter-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: #4169e1;
+            font-size: 13px;
+            padding: 4px 0;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .btn-link:hover {
+            color: #3057d5;
+        }
+
+        .item-filter-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .item-filter-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+
+        .item-filter-checkbox:hover {
+            background: #f5f5f5;
+        }
+
+        .item-filter-checkbox.hidden {
+            display: none;
+        }
+
+        .item-filter-checkbox input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .item-filter-checkbox label {
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-filter-checkbox .item-code {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .item-filter-checkbox .item-count {
+            color: #666;
+            font-size: 13px;
+            margin-left: 12px;
+        }
+
+        /* View Tabs */
+        .view-tabs {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .view-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-right: 4px;
+        }
+
+        .view-tab {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .view-tab:hover {
+            background: #f0f0f0;
+            border-color: #bbb;
+        }
+
+        .view-tab.active {
+            background: #4169e1;
+            color: white;
+            border-color: #4169e1;
+        }
+
+        .view-tab.active:hover {
+            background: #3057d5;
+            border-color: #3057d5;
+        }
+
+        /* Modal Content Container */
+        #modal-content-container {
+            min-height: 300px;
+        }
+
+        .add-by-section {
+            background: #f0f7ff;
+            border: 2px solid #0066cc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .add-by-section h4 {
+            font-size: 16px;
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+
+        .add-by-controls {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .add-by-controls .control-group {
+            min-width: 200px;
+        }
+
+        .add-by-controls select {
+            width: 100%;
+        }
+
+        .add-btn {
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .bulk-add-info {
+            margin-top: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .bulk-add-info strong {
+            color: #0066cc;
+        }
+
+        .order-items {
+            margin-top: 20px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            background: #f5f5f5;
+            padding: 12px 15px;
+            border-left: 4px solid #0066cc;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .section-count {
+            font-size: 13px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .section-items {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .section-items table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .section-items thead {
+            background: #f5f5f5;
+        }
+
+        .section-items th {
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .section-items td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .section-items tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Action Toolbar (for Flat view and Custom Sections) */
+        .action-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 12px 0;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .action-toolbar button {
+            padding: 8px 16px;
+            font-size: 14px;
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .action-toolbar button:hover {
+            background: #e8e8e8;
+        }
+
+        /* Add Items By Section (for Group/Subcategory views) */
+        .add-items-by-section {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .add-items-by-section .add-controls {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .add-items-by-section .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .add-items-by-section label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .add-items-by-section select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 200px;
+        }
+
+        .add-items-by-section .btn-add {
+            background: #4169e1;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .add-items-by-section .btn-add:hover {
+            background: #3057d5;
+        }
+
+        /* Add Items Preview Info */
+        .add-preview-info {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: #f0f7ff;
+            border-left: 3px solid #4169e1;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333;
+            display: none;
+        }
+
+        .add-preview-info.visible {
+            display: block;
+        }
+
+        .add-preview-info::before {
+            content: "→ ";
+            color: #4169e1;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        .add-preview-info.loading {
+            background: #fff8e1;
+            border-left-color: #ffc107;
+        }
+
+        .add-preview-info.loading::before {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #ffc107;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .add-preview-info.success {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .add-preview-info.success::before {
+            content: "✓ ";
+            color: #4caf50;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-left: 4px solid #4caf50;
+            border-radius: 6px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-notification.hide {
+            opacity: 0;
+            transform: translateX(400px);
+        }
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .toast-icon {
+            font-size: 20px;
+            color: #4caf50;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Custom Sections View Styles */
+        .custom-sections-container {
+            margin-top: 20px;
+        }
+
+        .btn-add-section {
+            background: #4169e1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .btn-add-section:hover {
+            background: #3057d5;
+        }
+
+        .custom-section {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background: white;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .custom-section.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .custom-section.drag-over {
+            border-top: 3px solid #4169e1;
+        }
+
+        .custom-section-header {
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: #999;
+            font-size: 18px;
+            line-height: 1;
+            user-select: none;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .section-name-input {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .section-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch.active {
+            background: #4169e1;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: left 0.2s;
+        }
+
+        .toggle-switch.active::after {
+            left: 22px;
+        }
+
+        .btn-delete-section {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .btn-delete-section:hover {
+            color: #d32f2f;
+        }
+
+        .section-reorder-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .btn-reorder {
+            background: white;
+            border: 1px solid #ddd;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            line-height: 1;
+            transition: all 0.15s;
+        }
+
+        .btn-reorder:hover {
+            background: #f5f5f5;
+            border-color: #4169e1;
+            color: #4169e1;
+        }
+
+        .btn-reorder:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn-reorder:disabled:hover {
+            background: white;
+            border-color: #ddd;
+            color: #666;
+        }
+
+        .btn-reorder-menu {
+            position: relative;
+        }
+
+        .reorder-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 160px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .reorder-dropdown.active {
+            display: block;
+        }
+
+        .reorder-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            border: none;
+            background: none;
+            text-align: left;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .reorder-dropdown button:hover {
+            background: #f5f5f5;
+        }
+
+        .reorder-dropdown .dropdown-divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 4px 0;
+        }
+
+        .section-toolbar {
+            padding: 12px 16px;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .section-toolbar button {
+            padding: 6px 12px;
+            font-size: 13px;
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .section-toolbar button:hover {
+            background: #e8e8e8;
+        }
+
+        .section-content {
+            padding: 16px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Info boxes */
+        .info-box {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-box.error {
+            background: #ffebee;
+            border-left: 4px solid #c62828;
+            color: #c62828;
+        }
+
+        .info-box.success {
+            background: #e8f5e9;
+            border-left: 4px solid #2e7d32;
+            color: #2e7d32;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Add to Order Dialog */
+        .add-to-order-modal {
+            max-width: 480px;
+        }
+
+        .order-selection-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+
+        .order-selection-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .order-selection-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-selection-item:hover {
+            background: #f5f8ff;
+        }
+
+        .order-selection-item.selected {
+            background: #e3f2fd;
+            border-left: 3px solid #0066cc;
+        }
+
+        .order-selection-item input[type="radio"] {
+            margin-right: 12px;
+        }
+
+        .order-selection-info {
+            flex: 1;
+        }
+
+        .order-selection-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .order-selection-meta {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .create-new-order-section {
+            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            margin-top: 16px;
+        }
+
+        .create-new-order-section h4 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .order-name-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .order-name-input-group input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .order-name-input-group input:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .no-orders-message {
+            text-align: center;
+            padding: 24px;
+            color: #666;
+        }
+
+        .modal-header-with-input {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .modal-header-with-input h3 {
+            white-space: nowrap;
+        }
+
+        .order-name-header-input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .order-name-header-input:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Prototype Disclaimer -->
+        <div class="prototype-disclaimer">
+            <svg class="prototype-disclaimer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <div class="prototype-disclaimer-content">
+                <div class="prototype-disclaimer-title">Prototype Only</div>
+                <div class="prototype-disclaimer-text">This prototype demonstrates how we want to introduce auto-organization of orders into the platform. The functionality shown here is for exploration and validation purposes only, and should not be taken as a reflection of what will be implemented in the final product.</div>
+            </div>
+        </div>
+
+        <!-- Main Content with Items/Orders Tabs -->
+        <div class="main-content-wrapper">
+            <!-- Main Tabs Header -->
+            <div class="main-tabs-header">
+                <h3>Workbook</h3>
+                <div class="main-tabs-nav">
+                    <button class="main-tab-btn active" data-main-tab="items" onclick="switchMainTab('items')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                        Items
+                    </button>
+                    <button class="main-tab-btn" data-main-tab="orders" onclick="switchMainTab('orders')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        Orders
+                    </button>
+                </div>
+            </div>
+
+            <!-- Items Tab Content -->
+            <div class="main-tab-content active" id="items-tab-content">
+                <div class="tab-header">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span id="item-count">25 items</span>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button id="add-to-order-btn-top" onclick="openAddToOrderDialog()" style="display: none;">Add to Order</button>
+                        <button onclick="openCreateOrderModal()">+ Create Order</button>
+                    </div>
+                </div>
+
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th width="40">
+                            <input type="checkbox" class="checkbox" id="select-all">
+                        </th>
+                        <th>Order</th>
+                        <th class="sortable filterable" data-sort="item">
+                            <div class="column-header-content">
+                                <button class="filter-icon-btn" id="filter-item-btn" onclick="event.stopPropagation(); openItemFilter()" title="Filter by Price List Item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                    </svg>
+                                </button>
+                                <span class="column-header-label" onclick="sortItems('item')">Price List Item</span>
+                            </div>
+                        </th>
+                        <th class="sortable filterable" data-sort="group">
+                            <div class="column-header-content">
+                                <button class="filter-icon-btn" id="filter-group-btn" onclick="event.stopPropagation(); toggleFilterDropdown('group')" title="Filter by Group">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                    </svg>
+                                </button>
+                                <span class="column-header-label" onclick="sortItems('group')">Group</span>
+                            </div>
+                            <div class="filter-dropdown" id="filter-dropdown-group">
+                                <div class="filter-dropdown-header">Filter by Group</div>
+                                <select id="filter-group" onchange="applyFilters(); closeFilterDropdowns()">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th class="sortable filterable" data-sort="subcategory">
+                            <div class="column-header-content">
+                                <button class="filter-icon-btn" id="filter-subcategory-btn" onclick="event.stopPropagation(); toggleFilterDropdown('subcategory')" title="Filter by Subcategory">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                    </svg>
+                                </button>
+                                <span class="column-header-label" onclick="sortItems('subcategory')">Subcategory</span>
+                            </div>
+                            <div class="filter-dropdown" id="filter-dropdown-subcategory">
+                                <div class="filter-dropdown-header">Filter by Subcategory</div>
+                                <select id="filter-subcategory" onchange="applyFilters(); closeFilterDropdowns()">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="items-tbody">
+                </tbody>
+            </table>
+
+            <div id="selected-bar" class="selected-count" style="display: none;">
+                <span id="selected-text">0 items selected</span>
+                <button id="add-to-order-btn" onclick="openAddToOrderDialog()">Add to Order</button>
+            </div>
+            </div>
+
+            <!-- Orders Tab Content -->
+            <div class="main-tab-content" id="orders-tab-content">
+                <div class="orders-tab-content">
+                    <!-- Orders List View -->
+                    <div id="orders-list-view">
+                        <div id="orders-list-container">
+                            <!-- Orders will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Order Detail View -->
+                    <div id="order-detail-view" class="order-detail-view">
+                        <div class="order-detail-header">
+                            <button class="back-btn" onclick="showOrdersList()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                                Back to Orders
+                            </button>
+                            <h3 id="order-detail-title" class="order-detail-title">WO-001</h3>
+                            <div class="order-detail-actions">
+                                <button id="delete-order-detail-btn" class="btn-delete-order" onclick="deleteOrderFromDetail()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                    </svg>
+                                    Delete Order
+                                </button>
+                            </div>
+                        </div>
+                        <table class="order-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Price List Item</th>
+                                    <th>Group</th>
+                                    <th>Subcategory</th>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="order-detail-tbody">
+                            </tbody>
+                        </table>
+                        <div class="order-summary" id="order-summary">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-header-with-input">
+                    <h3 id="modal-title">Create Order:</h3>
+                    <input type="text" id="order-name-input" class="order-name-header-input" placeholder="Enter order name...">
+                </div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- View Tabs -->
+                <div class="view-tabs">
+                    <span class="view-label">View:</span>
+                    <button class="view-tab active" data-view="flat" onclick="switchView('flat')">Flat List</button>
+                    <button class="view-tab" data-view="custom" onclick="switchView('custom')">Custom Sections</button>
+                    <button class="view-tab" data-view="group" onclick="switchView('group')">By Group</button>
+                    <button class="view-tab" data-view="subcategory" onclick="switchView('subcategory')">By Subcategory</button>
+                </div>
+
+                <!-- Modal Content Container (will be dynamically populated based on view) -->
+                <div id="modal-content-container">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button onclick="createOrder()">Create Work Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Filter Modal -->
+    <div class="modal-overlay" id="item-filter-overlay">
+        <div class="modal item-filter-modal">
+            <div class="modal-header">
+                <h3>Filter by Price List Item</h3>
+                <button class="close-btn" onclick="closeItemFilter()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="item-filter-search">
+                    <input type="text" id="item-filter-search" placeholder="Search items (e.g., DRY, RES, PLB)..." oninput="filterItemCheckboxList()">
+                    <div class="item-filter-actions">
+                        <button class="btn-link" onclick="selectAllVisibleItems()">Select All Visible</button>
+                        <button class="btn-link" onclick="deselectAllItems()">Deselect All</button>
+                    </div>
+                </div>
+                <div class="item-filter-list" id="item-filter-list">
+                    <!-- Checkboxes will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeItemFilter()">Cancel</button>
+                <button onclick="applyItemFilter()">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Order Dialog -->
+    <div class="modal-overlay" id="add-to-order-overlay">
+        <div class="modal add-to-order-modal">
+            <div class="modal-header">
+                <h3>Add to Order</h3>
+                <button class="close-btn" onclick="closeAddToOrderDialog()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 16px; color: #666;"><span id="add-to-order-count">0</span> items selected</p>
+
+                <div id="existing-orders-section">
+                    <h4 style="font-size: 14px; margin-bottom: 12px;">Add to existing order:</h4>
+                    <div class="order-selection-list" id="order-selection-list">
+                        <!-- Orders will be rendered here -->
+                    </div>
+                </div>
+
+                <div class="create-new-order-section">
+                    <h4>Or create a new order:</h4>
+                    <div class="order-name-input-group">
+                        <input type="text" id="new-order-name-input" placeholder="Enter order name (e.g., WO-004)">
+                        <button onclick="createNewOrderWithItems()">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate 250 sample items with real Xactimate component codes
+        // Uses recommended mapping: Group=Room, Subcategory=Component Type (Labor/Material)
+        const itemsData = (() => {
+            const items = [];
+            const categories = [
+                { item: "DRY1/2", descriptions: ["1/2\" drywall - hung, taped, floated, ready for paint", "1/2\" drywall - hung, taped, ready for texture", "1/2\" drywall - hung, taped, heavy texture, ready for paint", "1/2\" drywall - hung & fire taped only", "1/2\" drywall - hung only (no tape or finish)", "1/2\" mold/mildew resistant - hung, taped ready for texture"] },
+                { item: "RES3X", descriptions: ["Resilient tile flooring - 12\" x 12\"", "Resilient tile flooring - remove", "Resilient sheet flooring - install", "Resilient sheet flooring - remove", "Underlayment - 1/4\" plywood", "Vinyl plank flooring - install"] },
+                { item: "PLBFXST", descriptions: ["Fixture stop - chrome", "Fixture stop - compression fitting", "Supply line - flexible - stainless steel", "Supply line - copper tube", "Drain line - ABS/PVC", "Shut-off valve - install"] },
+                { item: "CONMOVE", descriptions: ["Move contents - per hour", "Move furniture - large items", "Move contents to storage", "Move contents back from storage", "Content manipulation - per hour", "Furniture moving - labor only"] },
+                { item: "PNTDOOR", descriptions: ["Paint door - both sides - 1 coat", "Paint door - both sides - 2 coats", "Paint interior walls - 1 coat", "Paint ceiling - 1 coat", "Prime & paint trim - 2 coats", "Seal & paint texture - 2 coats"] },
+                { item: "CABBASE", descriptions: ["Base cabinet - 12\" wide", "Base cabinet - 18\" wide", "Base cabinet - 24\" wide", "Wall cabinet - 12\" wide", "Wall cabinet - 18\" wide", "Lazy susan - corner cabinet"] },
+                { item: "PNT-00010", descriptions: ["Paint interior walls - 2 coats", "Paint interior trim - 2 coats", "Paint interior ceiling - 1 coat", "Paint interior doors - both sides", "Prime & paint interior - 2 coats", "Interior painting - labor only"] },
+                { item: "INSBI10", descriptions: ["Blown-in insulation - 10\" depth - R26", "Blown-in insulation - 12\" depth - R30", "Fiberglass batt insulation - R19", "Fiberglass batt insulation - R30", "Vapor barrier - 6 mil polyethylene", "Insulation - remove"] },
+                { item: "CONBOX", descriptions: ["Box contents - per box", "Box contents - fragile items", "Box contents - books/documents", "Box contents - kitchen items", "Pack & box contents - per hour", "Boxing contents - labor only"] },
+                { item: "DRY1/4", descriptions: ["1/4\" drywall - hung, taped, floated, ready for paint", "1/4\" drywall - hung, taped, ready for texture", "1/4\" drywall - hung, taped, heavy texture, ready for paint", "1/4\" drywall - hung & fire taped only", "1/4\" drywall - hung only (no tape or finish)", "1/4\" drywall - repair patch"] }
+            ];
+            const rooms = ["Kitchen", "Bathroom", "Living Room", "Bedroom", "Master Bedroom", "Guest Bedroom", "Dining Room", "Hallway", "Basement", "Laundry Room"];
+            const componentTypes = ["Labor", "Material"];
+            const laborOnlyItems = ["CONMOVE", "PNT-00010", "CONBOX", "DRY1/4"];
+            const units = ["sf", "lf", "ea"];
+            const sampleOrders = [null, null, null, "WO-001", "WO-001", "WO-002", "WO-003", null, null, null];
+
+            let id = 1;
+            for (let i = 0; i < 250; i++) {
+                const category = categories[i % categories.length];
+                const room = rooms[Math.floor(Math.random() * rooms.length)];
+                // Force Labor for specific items, otherwise random
+                const componentType = laborOnlyItems.includes(category.item)
+                    ? "Labor"
+                    : componentTypes[Math.floor(Math.random() * componentTypes.length)];
+                const description = category.descriptions[Math.floor(Math.random() * category.descriptions.length)];
+                const unit = units[Math.floor(Math.random() * units.length)];
+                const quantity = unit === "ea" ? Math.floor(Math.random() * 5) + 1 : Math.floor(Math.random() * 100) + 10;
+                const price = Math.floor(Math.random() * 500) + 25;
+                const order = sampleOrders[Math.floor(Math.random() * sampleOrders.length)];
+
+                items.push({
+                    id: id++,
+                    item: category.item,
+                    group: room,
+                    subcategory: componentType,
+                    description: description,
+                    quantity: `${quantity} ${unit}`,
+                    price: price,
+                    order: order
+                });
+            }
+            return items;
+        })();
+        let selectedItems = new Set();
+        let currentItems = [];
+        let orderItems = new Set(); // Items in the current order being created
+        let currentSort = { field: null, direction: null }; // null, 'asc', or 'desc'
+
+        // Item filter state
+        let selectedItemCodes = new Set(); // Selected item codes for filtering
+
+        // Main tab state (Items vs Orders)
+        let currentMainTab = 'items';
+
+        // Modal view state
+        let currentView = 'flat'; // 'flat', 'custom', 'group', 'subcategory'
+        let customSections = []; // Array of { id, name, showTotal, itemIds: [] }
+        let sectionOrder = []; // Array of section IDs for ordering
+        let nextSectionId = 1;
+        let groupOrder = []; // Array of group names for ordering in group view
+        let subcategoryOrder = []; // Array of subcategory names for ordering in subcategory view
+
+        // Order metadata storage - stores view settings for each order
+        // Key: order ID, Value: { viewMode, customSections, sectionOrder, groupOrder, subcategoryOrder }
+        let orderMetadata = {};
+
+        // Current order being edited (null for new orders)
+        let editingOrderId = null;
+
+        // Next order number for auto-naming
+        let nextOrderNumber = 4; // Starting at 4 since we have WO-001, WO-002, WO-003
+
+        // Initialize
+        function init() {
+            loadItems();
+            setupEventListeners();
+            updateFilters();
+        }
+
+        function setupEventListeners() {
+            // Select all checkbox
+            document.getElementById('select-all').addEventListener('change', (e) => {
+                const checkboxes = document.querySelectorAll('#items-tbody .item-checkbox');
+                checkboxes.forEach(cb => {
+                    cb.checked = e.target.checked;
+                    if (e.target.checked) {
+                        selectedItems.add(parseInt(cb.dataset.id));
+                    } else {
+                        selectedItems.delete(parseInt(cb.dataset.id));
+                    }
+                });
+                updateSelectionUI();
+            });
+
+            // Filter changes
+            document.getElementById('filter-group').addEventListener('change', applyFilters);
+            document.getElementById('filter-subcategory').addEventListener('change', applyFilters);
+
+            // Sort headers
+            document.querySelectorAll('.sortable').forEach(th => {
+                th.addEventListener('click', () => {
+                    const sortField = th.dataset.sort;
+                    sortItems(sortField);
+                });
+            });
+        }
+
+        function sortItems(field) {
+            // Toggle sort direction
+            if (currentSort.field === field) {
+                if (currentSort.direction === 'asc') {
+                    currentSort.direction = 'desc';
+                } else if (currentSort.direction === 'desc') {
+                    currentSort.direction = null;
+                    currentSort.field = null;
+                } else {
+                    currentSort.direction = 'asc';
+                }
+            } else {
+                currentSort.field = field;
+                currentSort.direction = 'asc';
+            }
+
+            // Update sort indicators
+            document.querySelectorAll('.sortable').forEach(th => {
+                th.classList.remove('asc', 'desc');
+                if (th.dataset.sort === currentSort.field) {
+                    if (currentSort.direction) {
+                        th.classList.add(currentSort.direction);
+                    }
+                }
+            });
+
+            // Sort the items
+            if (currentSort.field && currentSort.direction) {
+                currentItems.sort((a, b) => {
+                    const aVal = a[currentSort.field];
+                    const bVal = b[currentSort.field];
+
+                    if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
+                    if (aVal > bVal) return currentSort.direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            } else {
+                // Reset to original order
+                applyFilters();
+                return;
+            }
+
+            renderItems();
+        }
+
+        function loadItems() {
+            currentItems = [...itemsData];
+            currentSort = { field: null, direction: null }; // Reset sort
+            document.querySelectorAll('.sortable').forEach(th => {
+                th.classList.remove('asc', 'desc');
+            });
+            applyFilters();
+        }
+
+        function updateFilters() {
+            const groups = [...new Set(itemsData.map(i => i.group))].sort();
+            const subcategories = [...new Set(itemsData.map(i => i.subcategory))].sort();
+
+            const groupFilter = document.getElementById('filter-group');
+            const subcatFilter = document.getElementById('filter-subcategory');
+
+            groupFilter.innerHTML = '<option value="">All</option>' +
+                groups.map(g => `<option value="${g}">${g}</option>`).join('');
+
+            subcatFilter.innerHTML = '<option value="">All</option>' +
+                subcategories.map(s => `<option value="${s}">${s}</option>`).join('');
+        }
+
+        function applyFilters() {
+            const groupFilter = document.getElementById('filter-group').value;
+            const subcatFilter = document.getElementById('filter-subcategory').value;
+
+            let filtered = [...itemsData];
+
+            // Apply item code filter
+            if (selectedItemCodes.size > 0) {
+                filtered = filtered.filter(i => selectedItemCodes.has(i.item));
+            }
+
+            if (groupFilter) {
+                filtered = filtered.filter(i => i.group === groupFilter);
+            }
+            if (subcatFilter) {
+                filtered = filtered.filter(i => i.subcategory === subcatFilter);
+            }
+
+            currentItems = filtered;
+
+            // Re-apply sort if active
+            if (currentSort.field && currentSort.direction) {
+                currentItems.sort((a, b) => {
+                    const aVal = a[currentSort.field];
+                    const bVal = b[currentSort.field];
+
+                    if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
+                    if (aVal > bVal) return currentSort.direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            renderItems();
+            updateFilterIconStates();
+        }
+
+        function clearFilters() {
+            selectedItemCodes.clear();
+            updateItemFilterCount();
+            document.getElementById('filter-group').value = '';
+            document.getElementById('filter-subcategory').value = '';
+            applyFilters();
+        }
+
+        // Item Filter Modal Functions
+        function openItemFilter() {
+            const items = itemsData;
+            const itemCounts = {};
+
+            // Count occurrences of each item code
+            items.forEach(item => {
+                itemCounts[item.item] = (itemCounts[item.item] || 0) + 1;
+            });
+
+            // Sort item codes alphabetically
+            const sortedItems = Object.keys(itemCounts).sort();
+
+            // Populate checkbox list
+            const list = document.getElementById('item-filter-list');
+            list.innerHTML = sortedItems.map(itemCode => `
+                <div class="item-filter-checkbox" data-item-code="${itemCode}">
+                    <input type="checkbox" id="item-cb-${itemCode}" value="${itemCode}"
+                           ${selectedItemCodes.has(itemCode) ? 'checked' : ''}
+                           onchange="toggleItemCode('${itemCode}')">
+                    <label for="item-cb-${itemCode}">
+                        <span class="item-code">${itemCode}</span>
+                        <span class="item-count">(${itemCounts[itemCode]} item${itemCounts[itemCode] !== 1 ? 's' : ''})</span>
+                    </label>
+                </div>
+            `).join('');
+
+            // Clear search
+            document.getElementById('item-filter-search').value = '';
+
+            // Show modal
+            document.getElementById('item-filter-overlay').classList.add('active');
+        }
+
+        function closeItemFilter() {
+            document.getElementById('item-filter-overlay').classList.remove('active');
+        }
+
+        function toggleItemCode(itemCode) {
+            if (selectedItemCodes.has(itemCode)) {
+                selectedItemCodes.delete(itemCode);
+            } else {
+                selectedItemCodes.add(itemCode);
+            }
+        }
+
+        function selectAllVisibleItems() {
+            const checkboxes = document.querySelectorAll('.item-filter-checkbox:not(.hidden)');
+            checkboxes.forEach(div => {
+                const checkbox = div.querySelector('input[type="checkbox"]');
+                const itemCode = checkbox.value;
+                checkbox.checked = true;
+                selectedItemCodes.add(itemCode);
+            });
+        }
+
+        function deselectAllItems() {
+            const checkboxes = document.querySelectorAll('.item-filter-checkbox input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            selectedItemCodes.clear();
+        }
+
+        function filterItemCheckboxList() {
+            const searchTerm = document.getElementById('item-filter-search').value.toUpperCase();
+            const checkboxes = document.querySelectorAll('.item-filter-checkbox');
+
+            checkboxes.forEach(div => {
+                const itemCode = div.dataset.itemCode;
+                if (itemCode.toUpperCase().includes(searchTerm)) {
+                    div.classList.remove('hidden');
+                } else {
+                    div.classList.add('hidden');
+                }
+            });
+        }
+
+        function applyItemFilter() {
+            closeItemFilter();
+            updateItemFilterCount();
+            applyFilters();
+        }
+
+        function updateItemFilterCount() {
+            const filterBtn = document.getElementById('filter-item-btn');
+            if (selectedItemCodes.size > 0) {
+                filterBtn.classList.add('has-filter');
+            } else {
+                filterBtn.classList.remove('has-filter');
+            }
+            updateFilterIconStates();
+        }
+
+        function updateFilterIconStates() {
+            const groupFilter = document.getElementById('filter-group').value;
+            const subcatFilter = document.getElementById('filter-subcategory').value;
+
+            const groupBtn = document.getElementById('filter-group-btn');
+            const subcatBtn = document.getElementById('filter-subcategory-btn');
+
+            if (groupBtn) {
+                groupBtn.classList.toggle('has-filter', !!groupFilter);
+            }
+            if (subcatBtn) {
+                subcatBtn.classList.toggle('has-filter', !!subcatFilter);
+            }
+        }
+
+        function toggleFilterDropdown(filterType) {
+            const dropdown = document.getElementById(`filter-dropdown-${filterType}`);
+            const isActive = dropdown.classList.contains('active');
+
+            // Close all dropdowns first
+            closeFilterDropdowns();
+
+            // Toggle this one if it wasn't active
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+
+        function closeFilterDropdowns() {
+            document.querySelectorAll('.filter-dropdown').forEach(dd => {
+                dd.classList.remove('active');
+            });
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.filter-dropdown') && !e.target.closest('.filter-icon-btn')) {
+                closeFilterDropdowns();
+            }
+        });
+
+        function renderItems() {
+            const tbody = document.getElementById('items-tbody');
+
+            tbody.innerHTML = currentItems.map(item => `
+                <tr class="${selectedItems.has(item.id) ? 'selected' : ''}">
+                    <td>
+                        <input type="checkbox"
+                               class="checkbox item-checkbox"
+                               data-id="${item.id}"
+                               ${selectedItems.has(item.id) ? 'checked' : ''}
+                               onchange="toggleItem(${item.id})">
+                    </td>
+                    <td>${item.order || '-'}</td>
+                    <td>${item.item}</td>
+                    <td>${item.group}</td>
+                    <td>${item.subcategory}</td>
+                    <td>${item.description}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('item-count').textContent = `${currentItems.length} items`;
+            updateSelectionUI();
+        }
+
+        function toggleItem(id) {
+            if (selectedItems.has(id)) {
+                selectedItems.delete(id);
+            } else {
+                selectedItems.add(id);
+            }
+            updateSelectionUI();
+        }
+
+        function clearSelection() {
+            selectedItems.clear();
+            document.getElementById('select-all').checked = false;
+            updateSelectionUI();
+            renderItems();
+        }
+
+        function updateSelectionUI() {
+            const count = selectedItems.size;
+            const bar = document.getElementById('selected-bar');
+            const text = document.getElementById('selected-text');
+            const topBtn = document.getElementById('add-to-order-btn-top');
+
+            if (count > 0) {
+                bar.style.display = 'flex';
+                text.textContent = `${count} item${count === 1 ? '' : 's'} selected`;
+                topBtn.style.display = 'block';
+            } else {
+                bar.style.display = 'none';
+                topBtn.style.display = 'none';
+            }
+        }
+
+        // ==========================================
+        // Add to Order Dialog Functions
+        // ==========================================
+
+        function openAddToOrderDialog() {
+            if (selectedItems.size === 0) {
+                alert('Please select items first.');
+                return;
+            }
+
+            // Update count
+            document.getElementById('add-to-order-count').textContent = selectedItems.size;
+
+            // Render existing orders
+            renderOrderSelectionList();
+
+            // Generate suggested new order name
+            document.getElementById('new-order-name-input').value = generateNextOrderName();
+
+            // Show dialog
+            document.getElementById('add-to-order-overlay').classList.add('active');
+        }
+
+        function closeAddToOrderDialog() {
+            document.getElementById('add-to-order-overlay').classList.remove('active');
+        }
+
+        function renderOrderSelectionList() {
+            const orders = getOrdersData();
+            const container = document.getElementById('order-selection-list');
+            const existingSection = document.getElementById('existing-orders-section');
+
+            if (orders.length === 0) {
+                existingSection.style.display = 'none';
+                return;
+            }
+
+            existingSection.style.display = 'block';
+            container.innerHTML = orders.map(order => `
+                <div class="order-selection-item" onclick="addItemsToExistingOrder('${order.id}')">
+                    <div class="order-selection-info">
+                        <div class="order-selection-name">${order.id}</div>
+                        <div class="order-selection-meta">${order.items.length} items - $${order.totalPrice.toFixed(2)}</div>
+                    </div>
+                    <span class="order-card-arrow">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function addItemsToExistingOrder(orderId) {
+            // Add selected items to the existing order
+            selectedItems.forEach(itemId => {
+                const item = itemsData.find(i => i.id === itemId);
+                if (item) {
+                    item.order = orderId;
+                }
+            });
+
+            // If this order has custom sections metadata, add items to first section
+            if (orderMetadata[orderId] && orderMetadata[orderId].viewMode === 'custom') {
+                const meta = orderMetadata[orderId];
+                if (meta.customSections && meta.customSections.length > 0) {
+                    // Add to first section
+                    selectedItems.forEach(itemId => {
+                        if (!meta.customSections[0].itemIds.includes(itemId)) {
+                            meta.customSections[0].itemIds.push(itemId);
+                        }
+                    });
+                }
+            }
+
+            // Clear selection and close dialog
+            clearSelection();
+            closeAddToOrderDialog();
+            renderItems();
+
+            // Show confirmation
+            alert(`Added ${selectedItems.size || 'items'} to ${orderId}`);
+        }
+
+        function createNewOrderWithItems() {
+            const orderName = document.getElementById('new-order-name-input').value.trim();
+
+            if (!orderName) {
+                alert('Please enter an order name.');
+                return;
+            }
+
+            // Check if order name already exists
+            const existingOrders = getOrdersData();
+            if (existingOrders.some(o => o.id === orderName)) {
+                alert('An order with this name already exists. Please choose a different name.');
+                return;
+            }
+
+            // Assign selected items to the new order
+            const itemCount = selectedItems.size;
+            selectedItems.forEach(itemId => {
+                const item = itemsData.find(i => i.id === itemId);
+                if (item) {
+                    item.order = orderName;
+                }
+            });
+
+            // Initialize order metadata with flat view
+            orderMetadata[orderName] = {
+                viewMode: 'flat',
+                customSections: [],
+                sectionOrder: [],
+                groupOrder: [],
+                subcategoryOrder: []
+            };
+
+            // Update next order number if needed
+            const match = orderName.match(/WO-(\d+)/);
+            if (match) {
+                const num = parseInt(match[1]);
+                if (num >= nextOrderNumber) {
+                    nextOrderNumber = num + 1;
+                }
+            }
+
+            // Clear selection and close dialog
+            clearSelection();
+            closeAddToOrderDialog();
+            renderItems();
+
+            // Show confirmation
+            alert(`Created order "${orderName}" with ${itemCount} items.`);
+        }
+
+        function generateNextOrderName() {
+            return `WO-${String(nextOrderNumber).padStart(3, '0')}`;
+        }
+
+        // ==========================================
+        // Create Order Modal Functions
+        // ==========================================
+
+        function openCreateOrderModal() {
+            // Open empty modal for creating new order
+            editingOrderId = null;
+            orderItems = new Set();
+            currentView = 'flat';
+            customSections = [];
+            sectionOrder = [];
+            groupOrder = [];
+            subcategoryOrder = [];
+            nextSectionId = 1;
+
+            // Set up modal
+            document.getElementById('modal-title').textContent = 'Create Order:';
+            document.getElementById('order-name-input').value = generateNextOrderName();
+
+            // Reset view tabs
+            document.querySelectorAll('.view-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.view === 'flat');
+            });
+
+            document.getElementById('modal-overlay').classList.add('active');
+            renderModalContent();
+        }
+
+        function openEditOrderModal(orderId) {
+            // Open modal to edit existing order
+            editingOrderId = orderId;
+
+            // Get items for this order
+            const orderItemsList = itemsData.filter(item => item.order === orderId);
+            orderItems = new Set(orderItemsList.map(item => item.id));
+
+            // Load order metadata if exists
+            const meta = orderMetadata[orderId];
+            if (meta) {
+                currentView = meta.viewMode || 'flat';
+                customSections = JSON.parse(JSON.stringify(meta.customSections || []));
+                sectionOrder = [...(meta.sectionOrder || [])];
+                groupOrder = [...(meta.groupOrder || [])];
+                subcategoryOrder = [...(meta.subcategoryOrder || [])];
+                nextSectionId = customSections.length > 0 ? Math.max(...customSections.map(s => s.id)) + 1 : 1;
+            } else {
+                currentView = 'flat';
+                customSections = [];
+                sectionOrder = [];
+                groupOrder = [];
+                subcategoryOrder = [];
+                nextSectionId = 1;
+            }
+
+            // Set up modal
+            document.getElementById('modal-title').textContent = 'Edit Order:';
+            document.getElementById('order-name-input').value = orderId;
+
+            // Reset view tabs
+            document.querySelectorAll('.view-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.view === currentView);
+            });
+
+            document.getElementById('modal-overlay').classList.add('active');
+            renderModalContent();
+        }
+
+        function openModal() {
+            // Legacy function - now opens Add to Order dialog
+            openAddToOrderDialog();
+        }
+
+        function openModalEmpty() {
+            // Legacy function - now opens Create Order modal
+            openCreateOrderModal();
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            orderItems.clear();
+            customSections = [];
+            sectionOrder = [];
+            groupOrder = [];
+            subcategoryOrder = [];
+            editingOrderId = null;
+        }
+
+        function switchView(viewName) {
+            currentView = viewName;
+
+            // Update tab active states
+            document.querySelectorAll('.view-tab').forEach(tab => {
+                if (tab.dataset.view === viewName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // If switching to Custom Sections and there are no sections yet but there are items,
+            // auto-create "Section 1" with all the items
+            if (viewName === 'custom' && customSections.length === 0 && orderItems.size > 0) {
+                const section = {
+                    id: nextSectionId++,
+                    name: 'Section 1',
+                    showTotal: true,
+                    itemIds: Array.from(orderItems)
+                };
+                customSections.push(section);
+                sectionOrder.push(section.id);
+            }
+
+            renderModalContent();
+        }
+
+        function updateAddByOptions() {
+            const method = document.getElementById('add-by-method').value;
+            const valueSelect = document.getElementById('add-by-value');
+            const valueLabel = document.getElementById('add-by-value-label');
+            const bulkInfo = document.getElementById('bulk-add-info');
+            const bulkCount = document.getElementById('bulk-count');
+
+            const items = itemsData;
+            // Filter out items already in the order
+            const availableItems = items.filter(item => !orderItems.has(item.id));
+
+            if (method === 'one') {
+                valueLabel.textContent = 'Select item:';
+                if (availableItems.length === 0) {
+                    valueSelect.innerHTML = '<option value="">No items available</option>';
+                } else {
+                    valueSelect.innerHTML = '<option value="">Choose...</option>' +
+                        availableItems.map(item => `<option value="${item.id}">${item.description} (${item.group} - ${item.subcategory})</option>`).join('');
+                }
+                bulkInfo.style.display = 'none';
+            } else if (method === 'group') {
+                // Only show groups that have at least one available item
+                const groupsWithAvailable = {};
+                availableItems.forEach(item => {
+                    if (!groupsWithAvailable[item.group]) {
+                        groupsWithAvailable[item.group] = 0;
+                    }
+                    groupsWithAvailable[item.group]++;
+                });
+
+                const groups = Object.keys(groupsWithAvailable).sort();
+                valueLabel.textContent = 'Select Group:';
+
+                if (groups.length === 0) {
+                    valueSelect.innerHTML = '<option value="">No groups available</option>';
+                } else {
+                    valueSelect.innerHTML = '<option value="">Choose...</option>' +
+                        groups.map(g => {
+                            const count = groupsWithAvailable[g];
+                            return `<option value="${g}">${g} (${count} item${count === 1 ? '' : 's'})</option>`;
+                        }).join('');
+                }
+                bulkInfo.style.display = 'none';
+            } else if (method === 'subcategory') {
+                // Only show subcategories that have at least one available item
+                const subcategoriesWithAvailable = {};
+                availableItems.forEach(item => {
+                    if (!subcategoriesWithAvailable[item.subcategory]) {
+                        subcategoriesWithAvailable[item.subcategory] = 0;
+                    }
+                    subcategoriesWithAvailable[item.subcategory]++;
+                });
+
+                const subcategories = Object.keys(subcategoriesWithAvailable).sort();
+                valueLabel.textContent = 'Select Subcategory:';
+
+                if (subcategories.length === 0) {
+                    valueSelect.innerHTML = '<option value="">No subcategories available</option>';
+                } else {
+                    valueSelect.innerHTML = '<option value="">Choose...</option>' +
+                        subcategories.map(s => {
+                            const count = subcategoriesWithAvailable[s];
+                            return `<option value="${s}">${s} (${count} item${count === 1 ? '' : 's'})</option>`;
+                        }).join('');
+                }
+                bulkInfo.style.display = 'none';
+            }
+
+            // Update bulk add info when value changes
+            valueSelect.onchange = () => {
+                const value = valueSelect.value;
+                if (!value) {
+                    bulkInfo.style.display = 'none';
+                    return;
+                }
+
+                if (method === 'group') {
+                    const count = availableItems.filter(i => i.group === value).length;
+                    bulkCount.textContent = count;
+                    bulkInfo.style.display = 'block';
+                } else if (method === 'subcategory') {
+                    const count = availableItems.filter(i => i.subcategory === value).length;
+                    bulkCount.textContent = count;
+                    bulkInfo.style.display = 'block';
+                } else {
+                    bulkInfo.style.display = 'none';
+                }
+            };
+        }
+
+        function addItemsToOrder() {
+            const method = document.getElementById('add-by-method').value;
+            const value = document.getElementById('add-by-value').value;
+
+            if (!value) {
+                alert('Please select an item, group, or subcategory to add');
+                return;
+            }
+
+            const items = itemsData;
+
+            if (method === 'one') {
+                orderItems.add(parseInt(value));
+            } else if (method === 'group') {
+                // Only add items that aren't already in the order
+                items.filter(i => i.group === value && !orderItems.has(i.id)).forEach(item => {
+                    orderItems.add(item.id);
+                });
+            } else if (method === 'subcategory') {
+                // Only add items that aren't already in the order
+                items.filter(i => i.subcategory === value && !orderItems.has(i.id)).forEach(item => {
+                    orderItems.add(item.id);
+                });
+            }
+
+            // Reset the value select and refresh the dropdown options
+            document.getElementById('add-by-value').value = '';
+            document.getElementById('bulk-add-info').style.display = 'none';
+
+            // Refresh the dropdown to remove added items
+            updateAddByOptions();
+
+            // Update the modal display
+            renderModalContent();
+        }
+
+        function renderModalContent() {
+            const container = document.getElementById('modal-content-container');
+
+            const selected = Array.from(orderItems).map(id =>
+                itemsData.find(item => item.id === id)
+            ).filter(Boolean);
+
+            if (currentView === 'flat') {
+                // FLAT VIEW
+                container.innerHTML = `
+                    <div class="action-toolbar">
+                        <button onclick="openAddItemDialog('add')">Add</button>
+                        <button onclick="openAddItemDialog('group')">Add By Group</button>
+                        <button onclick="openAddItemDialog('subcategory')">Add By Subcategory</button>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                        <button>Update</button>
+                        <button>Cancel</button>
+                    </div>
+
+                    ${selected.length === 0 ? '<p style="text-align: center; color: #999; padding: 40px;">No items added yet</p>' : `
+                        <div class="section-items">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th width="40"><input type="checkbox" class="checkbox"></th>
+                                        <th>Date</th>
+                                        <th>Price List Item</th>
+                                        <th>Group</th>
+                                        <th>Subcategory</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                ${selected.map(item => `
+                                    <tr>
+                                        <td><input type="checkbox" class="checkbox"></td>
+                                        <td>11/17/2025</td>
+                                        <td>${item.item}</td>
+                                        <td>${item.group}</td>
+                                        <td>${item.subcategory}</td>
+                                        <td>${item.description}</td>
+                                        <td>${item.quantity}</td>
+                                        <td style="text-align: right">$${item.price.toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `}
+                `;
+                // Show success state after items appear in UI (flat view)
+                setTimeout(() => checkPendingAddSuccess(), 0);
+            } else if (currentView === 'custom') {
+                // CUSTOM SECTIONS VIEW
+                container.innerHTML = `
+                    <button class="btn-add-section" onclick="addSection()">Add section</button>
+
+                    <div class="custom-sections-container" id="sections-container">
+                        ${customSections.length === 0 ? '<p style="text-align: center; color: #999; padding: 40px;">No sections yet. Click "Add section" to create one.</p>' :
+                            sectionOrder.map(id => {
+                                const section = customSections.find(s => s.id === id);
+                                return section ? renderCustomSection(section) : '';
+                            }).join('')
+                        }
+                    </div>
+                `;
+
+                // Attach drag and drop event listeners after rendering
+                setTimeout(() => {
+                    if (customSections.length > 0) {
+                        attachDragListeners();
+                    }
+                    // Show success state after items appear in UI
+                    checkPendingAddSuccess();
+                }, 0);
+            } else if (currentView === 'group') {
+                // GROUP VIEW
+                const groups = {};
+                selected.forEach(item => {
+                    if (!groups[item.group]) groups[item.group] = [];
+                    groups[item.group].push(item);
+                });
+
+                // Initialize groupOrder if empty or if groups have changed
+                const groupKeys = Object.keys(groups).sort();
+                if (groupOrder.length === 0 || !groupKeys.every(key => groupOrder.includes(key))) {
+                    groupOrder = groupKeys;
+                }
+
+                container.innerHTML = `
+                    <div class="add-items-by-section">
+                        <div class="add-controls">
+                            <div class="control-group">
+                                <label>Add items by:</label>
+                                <select id="add-by-method-modal" onchange="updateAddByOptionsModal()">
+                                    <option value="one">One item at a time</option>
+                                    <option value="group">All items in Group</option>
+                                    <option value="subcategory">All items in Subcategory</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label id="add-by-value-label-modal">Select item:</label>
+                                <select id="add-by-value-modal" onchange="updateAddPreviewInfo()">
+                                    <option value="">Choose...</option>
+                                </select>
+                            </div>
+                            <button class="btn-add" onclick="addItemsToOrderModal()"><span style="font-size: 18px;">+</span> Add to Order</button>
+                        </div>
+                        <div id="add-preview-info" class="add-preview-info"></div>
+                    </div>
+
+                    ${selected.length === 0 ? '<p style="text-align: center; color: #999; padding: 40px;">No items added yet</p>' :
+                        groupOrder.filter(key => groups[key]).map((key, index) => {
+                            const items = groups[key];
+                            const total = items.reduce((sum, item) => sum + item.price, 0);
+                            const isFirst = index === 0;
+                            const isLast = index === groupOrder.filter(k => groups[k]).length - 1;
+                            return `
+                                <div class="custom-section" data-group-name="${key}">
+                                    <div class="custom-section-header">
+                                        <span class="drag-handle" draggable="true">⋮⋮</span>
+                                        <span style="flex: 1; font-weight: 600; font-size: 15px;">${key}</span>
+                                        <div class="section-controls">
+                                            <div class="section-reorder-controls">
+                                                <button class="btn-reorder" onclick="moveGroupUp('${key}')" ${isFirst ? 'disabled' : ''} title="Move up">▲</button>
+                                                <button class="btn-reorder" onclick="moveGroupDown('${key}')" ${isLast ? 'disabled' : ''} title="Move down">▼</button>
+                                                <div class="btn-reorder-menu">
+                                                    <button class="btn-reorder" onclick="toggleReorderMenuGroup('${key}')" title="More options">⋯</button>
+                                                    <div class="reorder-dropdown" id="reorder-dropdown-group-${key.replace(/\s+/g, '-')}">
+                                                        <button onclick="moveGroupToTop('${key}'); closeReorderMenuGroup('${key}')">Move to top</button>
+                                                        <button onclick="moveGroupToBottom('${key}'); closeReorderMenuGroup('${key}')">Move to bottom</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="toggle-label">
+                                                Show section total
+                                                <div class="toggle-switch active"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="section-toolbar">
+                                        <button>Edit</button>
+                                        <button>Delete</button>
+                                        <button>Update</button>
+                                        <button>Cancel</button>
+                                    </div>
+                                    <div class="section-content">
+                                        <div class="section-items">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th width="40"><input type="checkbox" class="checkbox"></th>
+                                                        <th>Date</th>
+                                                        <th>Price List Item</th>
+                                                        <th>Group</th>
+                                                        <th>Subcategory</th>
+                                                                                                                <th>Description</th>
+                                                        <th>Quantity</th>
+                                                        <th>Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                ${items.map(item => `
+                                                    <tr>
+                                                        <td><input type="checkbox" class="checkbox"></td>
+                                                        <td>11/17/2025</td>
+                                                        <td>${item.item}</td>
+                                                        <td>${item.group}</td>
+                                                        <td>${item.subcategory}</td>
+                                                                                                                <td>${item.description}</td>
+                                                        <td>${item.quantity}</td>
+                                                        <td style="text-align: right">$${item.price.toFixed(2)}</td>
+                                                    </tr>
+                                                `).join('')}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')
+                    }
+                `;
+
+                // Initialize the add-by dropdowns for group view
+                setTimeout(() => {
+                    updateAddByOptionsModal();
+                    if (selected.length > 0) {
+                        attachDragListeners();
+                    }
+                    // Show success state after items appear in UI
+                    checkPendingAddSuccess();
+                }, 0);
+            } else if (currentView === 'subcategory') {
+                // SUBCATEGORY VIEW (same as Group but grouped by subcategory)
+                const groups = {};
+                selected.forEach(item => {
+                    if (!groups[item.subcategory]) groups[item.subcategory] = [];
+                    groups[item.subcategory].push(item);
+                });
+
+                // Initialize subcategoryOrder if empty or if subcategories have changed
+                const subcategoryKeys = Object.keys(groups).sort();
+                if (subcategoryOrder.length === 0 || !subcategoryKeys.every(key => subcategoryOrder.includes(key))) {
+                    subcategoryOrder = subcategoryKeys;
+                }
+
+                container.innerHTML = `
+                    <div class="add-items-by-section">
+                        <div class="add-controls">
+                            <div class="control-group">
+                                <label>Add items by:</label>
+                                <select id="add-by-method-modal" onchange="updateAddByOptionsModal()">
+                                    <option value="one">One item at a time</option>
+                                    <option value="group">All items in Group</option>
+                                    <option value="subcategory">All items in Subcategory</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label id="add-by-value-label-modal">Select item:</label>
+                                <select id="add-by-value-modal" onchange="updateAddPreviewInfo()">
+                                    <option value="">Choose...</option>
+                                </select>
+                            </div>
+                            <button class="btn-add" onclick="addItemsToOrderModal()"><span style="font-size: 18px;">+</span> Add to Order</button>
+                        </div>
+                        <div id="add-preview-info" class="add-preview-info"></div>
+                    </div>
+
+                    ${selected.length === 0 ? '<p style="text-align: center; color: #999; padding: 40px;">No items added yet</p>' :
+                        subcategoryOrder.filter(key => groups[key]).map((key, index) => {
+                            const items = groups[key];
+                            const total = items.reduce((sum, item) => sum + item.price, 0);
+                            const isFirst = index === 0;
+                            const isLast = index === subcategoryOrder.filter(k => groups[k]).length - 1;
+                            return `
+                                <div class="custom-section" data-subcategory-name="${key}">
+                                    <div class="custom-section-header">
+                                        <span class="drag-handle" draggable="true">⋮⋮</span>
+                                        <span style="flex: 1; font-weight: 600; font-size: 15px;">${key}</span>
+                                        <div class="section-controls">
+                                            <div class="section-reorder-controls">
+                                                <button class="btn-reorder" onclick="moveSubcategoryUp('${key}')" ${isFirst ? 'disabled' : ''} title="Move up">▲</button>
+                                                <button class="btn-reorder" onclick="moveSubcategoryDown('${key}')" ${isLast ? 'disabled' : ''} title="Move down">▼</button>
+                                                <div class="btn-reorder-menu">
+                                                    <button class="btn-reorder" onclick="toggleReorderMenuSubcategory('${key}')" title="More options">⋯</button>
+                                                    <div class="reorder-dropdown" id="reorder-dropdown-subcategory-${key.replace(/\s+/g, '-')}">
+                                                        <button onclick="moveSubcategoryToTop('${key}'); closeReorderMenuSubcategory('${key}')">Move to top</button>
+                                                        <button onclick="moveSubcategoryToBottom('${key}'); closeReorderMenuSubcategory('${key}')">Move to bottom</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="toggle-label">
+                                                Show section total
+                                                <div class="toggle-switch active"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="section-toolbar">
+                                        <button>Edit</button>
+                                        <button>Delete</button>
+                                        <button>Update</button>
+                                        <button>Cancel</button>
+                                    </div>
+                                    <div class="section-content">
+                                        <div class="section-items">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th width="40"><input type="checkbox" class="checkbox"></th>
+                                                        <th>Date</th>
+                                                        <th>Price List Item</th>
+                                                        <th>Group</th>
+                                                        <th>Subcategory</th>
+                                                                                                                <th>Description</th>
+                                                        <th>Quantity</th>
+                                                        <th>Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                ${items.map(item => `
+                                                    <tr>
+                                                        <td><input type="checkbox" class="checkbox"></td>
+                                                        <td>11/17/2025</td>
+                                                        <td>${item.item}</td>
+                                                        <td>${item.group}</td>
+                                                        <td>${item.subcategory}</td>
+                                                                                                                <td>${item.description}</td>
+                                                        <td>${item.quantity}</td>
+                                                        <td style="text-align: right">$${item.price.toFixed(2)}</td>
+                                                    </tr>
+                                                `).join('')}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')
+                    }
+                `;
+
+                // Initialize the add-by dropdowns for subcategory view
+                setTimeout(() => {
+                    updateAddByOptionsModal();
+                    if (selected.length > 0) {
+                        attachDragListeners();
+                    }
+                    // Show success state after items appear in UI
+                    checkPendingAddSuccess();
+                }, 0);
+            }
+        }
+
+        // Check and show pending add success after render
+        function checkPendingAddSuccess() {
+            if (pendingAddSuccess) {
+                const { count, label, method } = pendingAddSuccess;
+                pendingAddSuccess = null;
+                // Use requestAnimationFrame to ensure DOM is painted
+                requestAnimationFrame(() => {
+                    showAddSuccessState(count, label, method);
+                });
+            }
+        }
+
+        // Custom Sections Functions
+        function addSection() {
+            const section = {
+                id: nextSectionId++,
+                name: `Section ${nextSectionId - 1}`,
+                showTotal: true,
+                itemIds: []
+            };
+            customSections.push(section);
+            sectionOrder.push(section.id);
+            renderModalContent();
+        }
+
+        function renderCustomSection(section) {
+            const sectionItems = section.itemIds.map(id =>
+                itemsData.find(item => item.id === id)
+            ).filter(Boolean);
+            const total = sectionItems.reduce((sum, item) => sum + item.price, 0);
+
+            const currentIndex = sectionOrder.indexOf(section.id);
+            const isFirst = currentIndex === 0;
+            const isLast = currentIndex === sectionOrder.length - 1;
+
+            return `
+                <div class="custom-section" data-section-id="${section.id}">
+                    <div class="custom-section-header">
+                        <span class="drag-handle" draggable="true">⋮⋮</span>
+                        <input type="text" class="section-name-input" value="${section.name}" onchange="renameSection(${section.id}, this.value)">
+                        <div class="section-controls">
+                            <div class="section-reorder-controls">
+                                <button class="btn-reorder" onclick="moveSectionUp(${section.id})" ${isFirst ? 'disabled' : ''} title="Move up">▲</button>
+                                <button class="btn-reorder" onclick="moveSectionDown(${section.id})" ${isLast ? 'disabled' : ''} title="Move down">▼</button>
+                                <div class="btn-reorder-menu">
+                                    <button class="btn-reorder" onclick="toggleReorderMenu(${section.id})" title="More options">⋯</button>
+                                    <div class="reorder-dropdown" id="reorder-dropdown-${section.id}">
+                                        <button onclick="moveSectionToTop(${section.id}); closeReorderMenu(${section.id})">Move to top</button>
+                                        <button onclick="moveSectionToBottom(${section.id}); closeReorderMenu(${section.id})">Move to bottom</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-label">
+                                Show section total
+                                <div class="toggle-switch ${section.showTotal ? 'active' : ''}" onclick="toggleSectionTotal(${section.id})"></div>
+                            </div>
+                            <button class="btn-delete-section" onclick="deleteSection(${section.id})">🗑</button>
+                        </div>
+                    </div>
+                    <div class="section-toolbar">
+                        <button onclick="openAddItemDialog('add', ${section.id})">Add</button>
+                        <button onclick="openAddItemDialog('group', ${section.id})">Add By Group</button>
+                        <button onclick="openAddItemDialog('subcategory', ${section.id})">Add By Subcategory</button>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                        <button>Update</button>
+                        <button>Cancel</button>
+                    </div>
+                    <div class="section-content">
+                        ${sectionItems.length === 0 ? '<p style="text-align: center; color: #999; padding: 20px;">No items in this section</p>' : `
+                            <div class="section-items">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th width="40"><input type="checkbox" class="checkbox"></th>
+                                            <th>Date</th>
+                                            <th>Price List Item</th>
+                                            <th>Group</th>
+                                            <th>Subcategory</th>
+                                                                                        <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    ${sectionItems.map(item => `
+                                        <tr>
+                                            <td><input type="checkbox" class="checkbox"></td>
+                                            <td>11/17/2025</td>
+                                            <td>${item.item}</td>
+                                            <td>${item.group}</td>
+                                            <td>${item.subcategory}</td>
+                                                                                        <td>${item.description}</td>
+                                            <td>${item.quantity}</td>
+                                            <td style="text-align: right">$${item.price.toFixed(2)}</td>
+                                        </tr>
+                                    `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function deleteSection(sectionId) {
+            customSections = customSections.filter(s => s.id !== sectionId);
+            sectionOrder = sectionOrder.filter(id => id !== sectionId);
+            renderModalContent();
+        }
+
+        function renameSection(sectionId, newName) {
+            const section = customSections.find(s => s.id === sectionId);
+            if (section) {
+                section.name = newName;
+            }
+        }
+
+        function toggleSectionTotal(sectionId) {
+            const section = customSections.find(s => s.id === sectionId);
+            if (section) {
+                section.showTotal = !section.showTotal;
+                renderModalContent();
+            }
+        }
+
+        // Drag and drop functionality
+        let draggedSection = null;
+        let draggedIdentifier = null; // Can be sectionId (number), groupName (string), or subcategoryName (string)
+        let dragType = null; // 'custom', 'group', or 'subcategory'
+
+        function attachDragListeners() {
+            const dragHandles = document.querySelectorAll('.drag-handle');
+            const sections = document.querySelectorAll('.custom-section');
+
+            dragHandles.forEach(handle => {
+                handle.addEventListener('dragstart', handleDragStart);
+                handle.addEventListener('dragend', handleDragEnd);
+            });
+
+            sections.forEach(section => {
+                section.addEventListener('dragover', handleDragOver);
+                section.addEventListener('drop', handleDrop);
+                section.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+
+        function handleDragStart(e) {
+            // Get the parent section
+            draggedSection = e.target.closest('.custom-section');
+            draggedSection.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+
+            // Determine what type of section this is
+            if (draggedSection.dataset.sectionId) {
+                dragType = 'custom';
+                draggedIdentifier = parseInt(draggedSection.dataset.sectionId);
+            } else if (draggedSection.dataset.groupName) {
+                dragType = 'group';
+                draggedIdentifier = draggedSection.dataset.groupName;
+            } else if (draggedSection.dataset.subcategoryName) {
+                dragType = 'subcategory';
+                draggedIdentifier = draggedSection.dataset.subcategoryName;
+            }
+
+            e.dataTransfer.setData('text/plain', draggedIdentifier);
+        }
+
+        function handleDragEnd(e) {
+            if (draggedSection) {
+                draggedSection.classList.remove('dragging');
+            }
+
+            // Remove all drag-over classes
+            document.querySelectorAll('.custom-section').forEach(section => {
+                section.classList.remove('drag-over');
+            });
+
+            draggedSection = null;
+            draggedIdentifier = null;
+            dragType = null;
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+
+            const targetSection = e.currentTarget;
+
+            // Get target identifier based on type
+            let targetIdentifier = null;
+            if (targetSection.dataset.sectionId) {
+                targetIdentifier = parseInt(targetSection.dataset.sectionId);
+            } else if (targetSection.dataset.groupName) {
+                targetIdentifier = targetSection.dataset.groupName;
+            } else if (targetSection.dataset.subcategoryName) {
+                targetIdentifier = targetSection.dataset.subcategoryName;
+            }
+
+            if (draggedIdentifier && draggedIdentifier !== targetIdentifier) {
+                targetSection.classList.add('drag-over');
+            }
+
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+
+            const targetSection = e.currentTarget;
+            targetSection.classList.remove('drag-over');
+
+            // Get target identifier based on type
+            let targetIdentifier = null;
+            if (targetSection.dataset.sectionId) {
+                targetIdentifier = parseInt(targetSection.dataset.sectionId);
+            } else if (targetSection.dataset.groupName) {
+                targetIdentifier = targetSection.dataset.groupName;
+            } else if (targetSection.dataset.subcategoryName) {
+                targetIdentifier = targetSection.dataset.subcategoryName;
+            }
+
+            if (draggedIdentifier && draggedIdentifier !== targetIdentifier) {
+                // Determine which order array to update
+                let orderArray = null;
+                if (dragType === 'custom') {
+                    orderArray = sectionOrder;
+                } else if (dragType === 'group') {
+                    orderArray = groupOrder;
+                } else if (dragType === 'subcategory') {
+                    orderArray = subcategoryOrder;
+                }
+
+                if (orderArray) {
+                    // Find the indices in the appropriate order array
+                    const draggedIndex = orderArray.indexOf(draggedIdentifier);
+                    const targetIndex = orderArray.indexOf(targetIdentifier);
+
+                    if (draggedIndex !== -1 && targetIndex !== -1) {
+                        // Remove from old position
+                        orderArray.splice(draggedIndex, 1);
+
+                        // Insert at new position
+                        const newTargetIndex = orderArray.indexOf(targetIdentifier);
+                        orderArray.splice(newTargetIndex, 0, draggedIdentifier);
+
+                        // Re-render
+                        renderModalContent();
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        // Helper function to scroll to a section after reordering
+        function scrollToSection(identifier, type = 'section') {
+            setTimeout(() => {
+                let selector;
+                if (type === 'section') {
+                    selector = `[data-section-id="${identifier}"]`;
+                } else if (type === 'group') {
+                    selector = `[data-group-name="${identifier}"]`;
+                } else if (type === 'subcategory') {
+                    selector = `[data-subcategory-name="${identifier}"]`;
+                }
+
+                const element = document.querySelector(selector);
+                if (element) {
+                    // Scroll to show the section header at the top with some padding
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // Add a brief highlight effect
+                    element.style.transition = 'box-shadow 0.3s';
+                    element.style.boxShadow = '0 0 0 3px rgba(65, 105, 225, 0.3)';
+                    setTimeout(() => {
+                        element.style.boxShadow = '';
+                    }, 600);
+                }
+            }, 50);
+        }
+
+        // Reorder button functions for Custom Sections
+        function moveSectionUp(sectionId) {
+            const currentIndex = sectionOrder.indexOf(sectionId);
+            if (currentIndex > 0) {
+                sectionOrder.splice(currentIndex, 1);
+                sectionOrder.splice(currentIndex - 1, 0, sectionId);
+                renderModalContent();
+                scrollToSection(sectionId, 'section');
+            }
+        }
+
+        function moveSectionDown(sectionId) {
+            const currentIndex = sectionOrder.indexOf(sectionId);
+            if (currentIndex < sectionOrder.length - 1) {
+                sectionOrder.splice(currentIndex, 1);
+                sectionOrder.splice(currentIndex + 1, 0, sectionId);
+                renderModalContent();
+                scrollToSection(sectionId, 'section');
+            }
+        }
+
+        function moveSectionToTop(sectionId) {
+            const currentIndex = sectionOrder.indexOf(sectionId);
+            if (currentIndex > 0) {
+                sectionOrder.splice(currentIndex, 1);
+                sectionOrder.unshift(sectionId);
+                renderModalContent();
+                scrollToSection(sectionId, 'section');
+            }
+        }
+
+        function moveSectionToBottom(sectionId) {
+            const currentIndex = sectionOrder.indexOf(sectionId);
+            if (currentIndex < sectionOrder.length - 1) {
+                sectionOrder.splice(currentIndex, 1);
+                sectionOrder.push(sectionId);
+                renderModalContent();
+                scrollToSection(sectionId, 'section');
+            }
+        }
+
+        function toggleReorderMenu(sectionId) {
+            const dropdown = document.getElementById(`reorder-dropdown-${sectionId}`);
+            const isActive = dropdown.classList.contains('active');
+
+            // Close all other dropdowns
+            document.querySelectorAll('.reorder-dropdown').forEach(d => d.classList.remove('active'));
+
+            // Toggle this one
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+
+        function closeReorderMenu(sectionId) {
+            const dropdown = document.getElementById(`reorder-dropdown-${sectionId}`);
+            dropdown.classList.remove('active');
+        }
+
+        // Reorder functions for Group view
+        function moveGroupUp(groupName) {
+            const currentIndex = groupOrder.indexOf(groupName);
+            if (currentIndex > 0) {
+                groupOrder.splice(currentIndex, 1);
+                groupOrder.splice(currentIndex - 1, 0, groupName);
+                renderModalContent();
+                scrollToSection(groupName, 'group');
+            }
+        }
+
+        function moveGroupDown(groupName) {
+            const currentIndex = groupOrder.indexOf(groupName);
+            if (currentIndex < groupOrder.length - 1) {
+                groupOrder.splice(currentIndex, 1);
+                groupOrder.splice(currentIndex + 1, 0, groupName);
+                renderModalContent();
+                scrollToSection(groupName, 'group');
+            }
+        }
+
+        function moveGroupToTop(groupName) {
+            const currentIndex = groupOrder.indexOf(groupName);
+            if (currentIndex > 0) {
+                groupOrder.splice(currentIndex, 1);
+                groupOrder.unshift(groupName);
+                renderModalContent();
+                scrollToSection(groupName, 'group');
+            }
+        }
+
+        function moveGroupToBottom(groupName) {
+            const currentIndex = groupOrder.indexOf(groupName);
+            if (currentIndex < groupOrder.length - 1) {
+                groupOrder.splice(currentIndex, 1);
+                groupOrder.push(groupName);
+                renderModalContent();
+                scrollToSection(groupName, 'group');
+            }
+        }
+
+        function toggleReorderMenuGroup(groupName) {
+            const dropdown = document.getElementById(`reorder-dropdown-group-${groupName.replace(/\s+/g, '-')}`);
+            const isActive = dropdown.classList.contains('active');
+
+            // Close all other dropdowns
+            document.querySelectorAll('.reorder-dropdown').forEach(d => d.classList.remove('active'));
+
+            // Toggle this one
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+
+        function closeReorderMenuGroup(groupName) {
+            const dropdown = document.getElementById(`reorder-dropdown-group-${groupName.replace(/\s+/g, '-')}`);
+            dropdown.classList.remove('active');
+        }
+
+        // Reorder functions for Subcategory view
+        function moveSubcategoryUp(subcategoryName) {
+            const currentIndex = subcategoryOrder.indexOf(subcategoryName);
+            if (currentIndex > 0) {
+                subcategoryOrder.splice(currentIndex, 1);
+                subcategoryOrder.splice(currentIndex - 1, 0, subcategoryName);
+                renderModalContent();
+                scrollToSection(subcategoryName, 'subcategory');
+            }
+        }
+
+        function moveSubcategoryDown(subcategoryName) {
+            const currentIndex = subcategoryOrder.indexOf(subcategoryName);
+            if (currentIndex < subcategoryOrder.length - 1) {
+                subcategoryOrder.splice(currentIndex, 1);
+                subcategoryOrder.splice(currentIndex + 1, 0, subcategoryName);
+                renderModalContent();
+                scrollToSection(subcategoryName, 'subcategory');
+            }
+        }
+
+        function moveSubcategoryToTop(subcategoryName) {
+            const currentIndex = subcategoryOrder.indexOf(subcategoryName);
+            if (currentIndex > 0) {
+                subcategoryOrder.splice(currentIndex, 1);
+                subcategoryOrder.unshift(subcategoryName);
+                renderModalContent();
+                scrollToSection(subcategoryName, 'subcategory');
+            }
+        }
+
+        function moveSubcategoryToBottom(subcategoryName) {
+            const currentIndex = subcategoryOrder.indexOf(subcategoryName);
+            if (currentIndex < subcategoryOrder.length - 1) {
+                subcategoryOrder.splice(currentIndex, 1);
+                subcategoryOrder.push(subcategoryName);
+                renderModalContent();
+                scrollToSection(subcategoryName, 'subcategory');
+            }
+        }
+
+        function toggleReorderMenuSubcategory(subcategoryName) {
+            const dropdown = document.getElementById(`reorder-dropdown-subcategory-${subcategoryName.replace(/\s+/g, '-')}`);
+            const isActive = dropdown.classList.contains('active');
+
+            // Close all other dropdowns
+            document.querySelectorAll('.reorder-dropdown').forEach(d => d.classList.remove('active'));
+
+            // Toggle this one
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+
+        function closeReorderMenuSubcategory(subcategoryName) {
+            const dropdown = document.getElementById(`reorder-dropdown-subcategory-${subcategoryName.replace(/\s+/g, '-')}`);
+            dropdown.classList.remove('active');
+        }
+
+        // Close all dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.btn-reorder-menu')) {
+                document.querySelectorAll('.reorder-dropdown').forEach(d => d.classList.remove('active'));
+            }
+        });
+
+        // Dialog and modal-specific add functions
+        function openAddItemDialog(type, sectionId) {
+            // TODO: Implement dialog for adding items in Flat and Custom Sections views
+            alert(`Opening ${type} dialog${sectionId ? ` for section ${sectionId}` : ''}. This would show a selection interface.`);
+        }
+
+        function updateAddByOptionsModal() {
+            // Similar to updateAddByOptions but for the modal version in Group/Subcategory views
+            const method = document.getElementById('add-by-method-modal')?.value;
+            if (!method) return;
+
+            const valueSelect = document.getElementById('add-by-value-modal');
+            const valueLabel = document.getElementById('add-by-value-label-modal');
+            const items = itemsData;
+            const availableItems = items.filter(item => !orderItems.has(item.id));
+
+            if (method === 'one') {
+                if (valueLabel) valueLabel.textContent = 'Select item:';
+                if (availableItems.length === 0) {
+                    valueSelect.innerHTML = '<option value="">No items available</option>';
+                } else {
+                    valueSelect.innerHTML = '<option value="">Choose...</option>' +
+                        availableItems.map(item => `<option value="${item.id}">${item.description} (${item.group} - ${item.subcategory})</option>`).join('');
+                }
+            } else if (method === 'group') {
+                if (valueLabel) valueLabel.textContent = 'Select group:';
+                const groupsWithAvailable = {};
+                availableItems.forEach(item => {
+                    if (!groupsWithAvailable[item.group]) groupsWithAvailable[item.group] = 0;
+                    groupsWithAvailable[item.group]++;
+                });
+
+                const groups = Object.keys(groupsWithAvailable).sort();
+                if (groups.length === 0) {
+                    valueSelect.innerHTML = '<option value="">No groups available</option>';
+                } else {
+                    valueSelect.innerHTML = '<option value="">Choose...</option>' +
+                        groups.map(g => `<option value="${g}">${g} (${groupsWithAvailable[g]} item${groupsWithAvailable[g] === 1 ? '' : 's'})</option>`).join('');
+                }
+            } else if (method === 'subcategory') {
+                if (valueLabel) valueLabel.textContent = 'Select subcategory:';
+                const subcategoriesWithAvailable = {};
+                availableItems.forEach(item => {
+                    if (!subcategoriesWithAvailable[item.subcategory]) subcategoriesWithAvailable[item.subcategory] = 0;
+                    subcategoriesWithAvailable[item.subcategory]++;
+                });
+
+                const subcategories = Object.keys(subcategoriesWithAvailable).sort();
+                if (subcategories.length === 0) {
+                    valueSelect.innerHTML = '<option value="">No subcategories available</option>';
+                } else {
+                    valueSelect.innerHTML = '<option value="">Choose...</option>' +
+                        subcategories.map(s => `<option value="${s}">${s} (${subcategoriesWithAvailable[s]} item${subcategoriesWithAvailable[s] === 1 ? '' : 's'})</option>`).join('');
+                }
+            }
+
+            // Clear preview info when method changes
+            updateAddPreviewInfo();
+        }
+
+        function updateAddPreviewInfo() {
+            const method = document.getElementById('add-by-method-modal')?.value;
+            const value = document.getElementById('add-by-value-modal')?.value;
+            const previewInfo = document.getElementById('add-preview-info');
+
+            if (!previewInfo || !method || !value) {
+                if (previewInfo) {
+                    previewInfo.classList.remove('visible');
+                }
+                return;
+            }
+
+            const items = itemsData;
+            let filteredItems = [];
+            let previewText = '';
+
+            if (method === 'one') {
+                const itemId = parseInt(value);
+                if (!orderItems.has(itemId)) {
+                    filteredItems = items.filter(i => i.id === itemId);
+                    const item = filteredItems[0];
+                    previewText = `1 item will be added (${item.description})`;
+                }
+            } else if (method === 'group') {
+                filteredItems = items.filter(i => i.group === value && !orderItems.has(i.id));
+                const count = filteredItems.length;
+                if (count > 0) {
+                    previewText = `${count} ${value} item${count !== 1 ? 's' : ''} will be added`;
+                }
+            } else if (method === 'subcategory') {
+                filteredItems = items.filter(i => i.subcategory === value && !orderItems.has(i.id));
+                const count = filteredItems.length;
+                if (count > 0) {
+                    previewText = `${count} ${value} item${count !== 1 ? 's' : ''} will be added`;
+                }
+            }
+
+            if (previewText) {
+                previewInfo.textContent = previewText;
+                previewInfo.classList.add('visible');
+            } else {
+                previewInfo.textContent = 'All items from this selection are already in the order';
+                previewInfo.classList.add('visible');
+            }
+        }
+
+        function showToast(title, message) {
+            // Remove any existing toast
+            const existingToast = document.querySelector('.toast-notification');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            // Create new toast
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.innerHTML = `
+                <div class="toast-header">
+                    <span class="toast-icon">✓</span>
+                    <span class="toast-title">${title}</span>
+                </div>
+                <div class="toast-message">${message}</div>
+            `;
+            document.body.appendChild(toast);
+
+            // Show toast
+            setTimeout(() => toast.classList.add('show'), 10);
+
+            // Hide and remove toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Track pending add operation for success feedback after render
+        let pendingAddSuccess = null;
+
+        function showAddLoadingState(count, label, method) {
+            const previewInfo = document.getElementById('add-preview-info');
+            if (!previewInfo) return;
+
+            // Show loading state
+            previewInfo.classList.remove('success');
+            previewInfo.classList.add('loading', 'visible');
+            const message = method === 'one'
+                ? `Adding 1 item...`
+                : `Adding ${count} ${label} item${count !== 1 ? 's' : ''}...`;
+            previewInfo.textContent = message;
+        }
+
+        function showAddSuccessState(count, label, method) {
+            const previewInfo = document.getElementById('add-preview-info');
+            if (!previewInfo) return;
+
+            // Change to success state
+            previewInfo.classList.remove('loading');
+            previewInfo.classList.add('success', 'visible');
+            const message = method === 'one'
+                ? `1 item added`
+                : `${count} ${label} item${count !== 1 ? 's' : ''} added`;
+            previewInfo.textContent = message;
+
+            // Reset after delay, then reset dropdowns
+            setTimeout(() => {
+                previewInfo.classList.remove('success', 'visible');
+                previewInfo.textContent = '';
+                // Reset the dropdown for next addition
+                const valueSelect = document.getElementById('add-by-value-modal');
+                if (valueSelect) valueSelect.value = '';
+                updateAddByOptionsModal();
+            }, 1500);
+        }
+
+        function addItemsToOrderModal() {
+            const method = document.getElementById('add-by-method-modal')?.value;
+            const value = document.getElementById('add-by-value-modal')?.value;
+            if (!method || !value) return;
+
+            const items = itemsData;
+
+            // Calculate what will be added
+            let addedCount = 0;
+            let addedLabel = '';
+
+            if (method === 'one') {
+                const itemId = parseInt(value);
+                if (!orderItems.has(itemId)) {
+                    addedCount = 1;
+                    const item = items.find(i => i.id === itemId);
+                    addedLabel = item?.description || '';
+                }
+            } else if (method === 'group') {
+                const filtered = items.filter(i => i.group === value && !orderItems.has(i.id));
+                addedCount = filtered.length;
+                addedLabel = value;
+            } else if (method === 'subcategory') {
+                const filtered = items.filter(i => i.subcategory === value && !orderItems.has(i.id));
+                addedCount = filtered.length;
+                addedLabel = value;
+            }
+
+            // If nothing to add, just reset
+            if (addedCount === 0) {
+                document.getElementById('add-by-value-modal').value = '';
+                renderModalContent();
+                return;
+            }
+
+            // Show loading state
+            showAddLoadingState(addedCount, addedLabel, method);
+
+            // Store success info to show after render completes
+            pendingAddSuccess = { count: addedCount, label: addedLabel, method };
+
+            // Actually add the items
+            if (method === 'one') {
+                const itemId = parseInt(value);
+                if (!orderItems.has(itemId)) {
+                    orderItems.add(itemId);
+                }
+            } else if (method === 'group') {
+                const filtered = items.filter(i => i.group === value && !orderItems.has(i.id));
+                filtered.forEach(item => {
+                    orderItems.add(item.id);
+                });
+            } else if (method === 'subcategory') {
+                const filtered = items.filter(i => i.subcategory === value && !orderItems.has(i.id));
+                filtered.forEach(item => {
+                    orderItems.add(item.id);
+                });
+            }
+
+            // Re-render modal - success will show after render via requestAnimationFrame
+            renderModalContent();
+        }
+
+        function createOrder() {
+            const orderNameInput = document.getElementById('order-name-input');
+            const orderName = orderNameInput.value.trim();
+
+            // Validate order name
+            if (!orderName) {
+                alert('Please enter an order name.');
+                orderNameInput.focus();
+                return;
+            }
+
+            // Check if order name already exists (unless we're editing that order)
+            const existingOrders = getOrdersData();
+            const nameExists = existingOrders.some(o => o.id === orderName && orderName !== editingOrderId);
+            if (nameExists) {
+                alert(`An order named "${orderName}" already exists. Please choose a different name.`);
+                orderNameInput.focus();
+                return;
+            }
+
+            // Check if there are items to assign
+            if (orderItems.size === 0) {
+                alert('Please add at least one item to the order.');
+                return;
+            }
+
+            // If editing an existing order with a different name, unassign old items first
+            if (editingOrderId && editingOrderId !== orderName) {
+                itemsData.forEach(item => {
+                    if (item.order === editingOrderId) {
+                        item.order = null;
+                    }
+                });
+                // Remove old metadata
+                delete orderMetadata[editingOrderId];
+            }
+
+            // Assign all items in orderItems to this order
+            orderItems.forEach(itemId => {
+                const item = itemsData.find(i => i.id === itemId);
+                if (item) {
+                    item.order = orderName;
+                }
+            });
+
+            // Save order metadata (view mode, sections, etc.)
+            orderMetadata[orderName] = {
+                viewMode: currentView,
+                customSections: JSON.parse(JSON.stringify(customSections)),
+                sectionOrder: [...sectionOrder],
+                groupOrder: [...groupOrder],
+                subcategoryOrder: [...subcategoryOrder]
+            };
+
+            // Update nextOrderNumber if this was an auto-generated name
+            const match = orderName.match(/^WO-(\d+)$/);
+            if (match) {
+                const num = parseInt(match[1], 10);
+                if (num >= nextOrderNumber) {
+                    nextOrderNumber = num + 1;
+                }
+            }
+
+            // Show success toast
+            const itemCount = orderItems.size;
+            showToast('Order Saved', `${editingOrderId ? 'Updated' : 'Created'} "${orderName}" with ${itemCount} item${itemCount !== 1 ? 's' : ''}`);
+
+            // Close modal and refresh displays
+            closeModal();
+            renderItems();
+
+            // If on orders tab, refresh the list
+            if (currentMainTab === 'orders') {
+                renderOrdersList();
+            }
+        }
+
+        // ==========================================
+        // Main Tab Switching (Items / Orders)
+        // ==========================================
+
+        function switchMainTab(tabName) {
+            currentMainTab = tabName;
+
+            // Update tab button states
+            document.querySelectorAll('.main-tab-btn').forEach(btn => {
+                if (btn.dataset.mainTab === tabName) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Update tab content visibility
+            document.querySelectorAll('.main-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab-content`).classList.add('active');
+
+            // If switching to orders, render the orders list
+            if (tabName === 'orders') {
+                renderOrdersList();
+            }
+        }
+
+        function getOrdersData() {
+            // Build orders from item data
+            const items = itemsData;
+            const ordersMap = {};
+
+            items.forEach(item => {
+                if (item.order) {
+                    if (!ordersMap[item.order]) {
+                        ordersMap[item.order] = {
+                            id: item.order,
+                            items: [],
+                            totalPrice: 0
+                        };
+                    }
+                    ordersMap[item.order].items.push(item);
+                    ordersMap[item.order].totalPrice += item.price;
+                }
+            });
+
+            // Convert to array and sort by order ID
+            return Object.values(ordersMap).sort((a, b) => a.id.localeCompare(b.id));
+        }
+
+        function renderOrdersList() {
+            const orders = getOrdersData();
+            const container = document.getElementById('orders-list-container');
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-orders">
+                        <div class="empty-orders-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </div>
+                        <h4>No Orders Yet</h4>
+                        <p>Select items from the Items tab and click "Add to Order" to create your first work order.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="orders-list">
+                    ${orders.map(order => `
+                        <div class="order-card" onclick="showOrderDetail('${order.id}')">
+                            <div class="order-card-info">
+                                <span class="order-card-id">${order.id}</span>
+                                <span class="order-card-meta">${order.items.length} items - $${order.totalPrice.toFixed(2)}</span>
+                            </div>
+                            <div class="order-card-actions">
+                                <button class="order-delete-btn" onclick="event.stopPropagation(); deleteOrder('${order.id}')" title="Delete order">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                    </svg>
+                                </button>
+                                <span class="order-card-arrow">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Make sure we're showing the list view, not detail view
+            document.getElementById('orders-list-view').style.display = 'block';
+            document.getElementById('order-detail-view').classList.remove('active');
+        }
+
+        function showOrderDetail(orderId) {
+            const orders = getOrdersData();
+            const order = orders.find(o => o.id === orderId);
+
+            if (!order) return;
+
+            // Update title
+            document.getElementById('order-detail-title').textContent = orderId;
+
+            // Render items table
+            const tbody = document.getElementById('order-detail-tbody');
+            tbody.innerHTML = order.items.map(item => `
+                <tr>
+                    <td>${item.item}</td>
+                    <td>${item.group}</td>
+                    <td>${item.subcategory}</td>
+                    <td>${item.description}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                </tr>
+            `).join('');
+
+            // Render summary
+            document.getElementById('order-summary').innerHTML = `
+                <div class="order-summary-item">
+                    <span class="order-summary-label">Items</span>
+                    <span class="order-summary-value">${order.items.length}</span>
+                </div>
+                <div class="order-summary-item">
+                    <span class="order-summary-label">Total</span>
+                    <span class="order-summary-value">$${order.totalPrice.toFixed(2)}</span>
+                </div>
+            `;
+
+            // Show detail view, hide list view
+            document.getElementById('orders-list-view').style.display = 'none';
+            document.getElementById('order-detail-view').classList.add('active');
+        }
+
+        function showOrdersList() {
+            document.getElementById('orders-list-view').style.display = 'block';
+            document.getElementById('order-detail-view').classList.remove('active');
+        }
+
+        // Track current order being viewed (for delete from detail)
+        let currentOrderId = null;
+
+        // Store original showOrderDetail and wrap it to track current order
+        const originalShowOrderDetail = showOrderDetail;
+        showOrderDetail = function(orderId) {
+            currentOrderId = orderId;
+            originalShowOrderDetail(orderId);
+        };
+
+        function deleteOrder(orderId) {
+            const orders = getOrdersData();
+            const order = orders.find(o => o.id === orderId);
+
+            if (!order) return;
+
+            const confirmed = confirm(`Are you sure you want to delete "${orderId}"?\n\nThis will unassign ${order.items.length} items from this order.`);
+
+            if (!confirmed) return;
+
+            // Remove order assignment from all items in this order
+            itemsData.forEach(item => {
+                if (item.order === orderId) {
+                    item.order = null;
+                }
+            });
+
+            // Re-render the orders list
+            renderOrdersList();
+
+            // Also update the items table if needed
+            renderItems();
+        }
+
+        function deleteOrderFromDetail() {
+            if (currentOrderId) {
+                const orderId = currentOrderId;
+                deleteOrder(orderId);
+
+                // If the order was deleted, go back to the list
+                const orders = getOrdersData();
+                const orderStillExists = orders.find(o => o.id === orderId);
+                if (!orderStillExists) {
+                    showOrdersList();
+                }
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
