@@ -140,16 +140,21 @@ A new component for adding items in bulk within the By Group and By Subcategory 
 
 **UI Components:**
 - [ ] "Add items" dropdown to select method: "One item at a time", "All items in Group", "All items in Subcategory"
+- [ ] Default state: "One item at a time" pre-selected
 - [ ] Secondary dropdown - label and contents change based on method selected:
 
 | Method Selected | Dropdown Label | Dropdown Contents |
 |-----------------|----------------|-------------------|
-| One item at a time | "Select item:" | Searchable list of all items not yet in the order |
-| All items in Group | "Select group:" | List of groups that have items not yet in the order, with counts (e.g., "Kitchen (7 items)") |
-| All items in Subcategory | "Select subcategory:" | List of subcategories that have items not yet in the order, with counts (e.g., "Material (8 items)") |
+| One item at a time | "Select item:" | Searchable list of items not yet used in this order or any other order. Format: "{Item name} ({Group} - {Subcategory})" e.g., "Drywall (Kitchen - Labor)". Search matches item name, group, or subcategory. |
+| All items in Group | "Select group:" | List of groups that have available items, with counts (e.g., "Kitchen (7 items)"). Only shows groups with items not used in this or other orders. |
+| All items in Subcategory | "Select subcategory:" | List of subcategories that have available items, with counts (e.g., "Material (8 items)"). Only shows subcategories with items not used in this or other orders. |
 
+- [ ] Dropdown contents and counts update in real-time as items are added
+- [ ] Groups/subcategories disappear from dropdown once all their items are added
 - [ ] Preview/status text area below the dropdowns
-- [ ] "+ Add to Order" button to execute
+- [ ] "+ Add to Order" button
+  - Disabled until a selection is made in the second dropdown
+  - Disabled during loading state
 
 **Add Flow (for "All items in Group" or "All items in Subcategory"):**
 1. [ ] User selects add method from dropdown
@@ -159,13 +164,19 @@ A new component for adding items in bulk within the By Group and By Subcategory 
 5. [ ] **Loading state:** Arrow icon changes to loading spinner, text remains the same
 6. [ ] Items are added and auto-organized into appropriate sections
 7. [ ] **Success state:** Spinner changes to checkmark icon, text updates to "{X} {Group/Subcategory name} items added" (e.g., "8 Material items added")
-8. [ ] Success state displays briefly then resets
+8. [ ] Success state displays for 1500ms then resets, OR dismisses early on any interaction with the Add Items component
+9. [ ] **After success:** Second dropdown resets to "Choose..." but first dropdown stays on current method (e.g., still "All items in Group")
 
 **Add Flow (for "One item at a time"):**
-1. [ ] User selects "One item at a time" from dropdown
+1. [ ] User selects "One item at a time" from dropdown (or uses default)
 2. [ ] User searches/selects specific item from secondary dropdown
-3. [ ] User clicks "+ Add to Order"
-4. [ ] Item is added to the appropriate section based on its Group/Subcategory value
+3. [ ] **Preview state:** Text appears below dropdowns with arrow icon: "{Item name} will be added" (e.g., "Drywall will be added")
+4. [ ] User clicks "+ Add to Order"
+5. [ ] **Loading state:** Arrow icon changes to loading spinner, text remains the same
+6. [ ] Item is added to the appropriate section based on its Group/Subcategory value
+7. [ ] **Success state:** Spinner changes to checkmark icon, text updates to "{Item name} added" (e.g., "Drywall added")
+8. [ ] Success state displays for 1500ms then resets, OR dismisses early on any interaction with the Add Items component
+9. [ ] **After success:** Second dropdown resets to "Choose..." but first dropdown stays on "One item at a time"
 
 **Error State:**
 - [ ] If adding items fails, display inline error: "There was an error adding your items, please try again."
