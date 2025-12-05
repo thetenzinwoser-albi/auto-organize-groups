@@ -151,6 +151,7 @@ A new component for adding items in bulk within the By Group and By Subcategory 
 
 - [ ] Dropdown contents and counts update in real-time as items are added
 - [ ] Groups/subcategories disappear from dropdown once all their items are added
+- [ ] If no items available, second dropdown shows: "No items available" / "No groups available" / "No subcategories available" (based on method selected)
 - [ ] Preview/status text area below the dropdowns
 - [ ] "+ Add to Order" button
   - Disabled until a selection is made in the second dropdown
