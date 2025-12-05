@@ -31,6 +31,14 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] Default section order is alphabetical
 - [ ] Users can drag-and-drop sections to reorder them
 
+**Empty State:**
+- [ ] When no items exist, show "Add items to this order to see them here." placeholder
+- [ ] Add Items component remains visible and functional in empty state
+
+**Handling Missing Values:**
+- [ ] **By Subcategory:** Items without a Subcategory value go into an "Other" section
+- [ ] **By Group:** Items without a Group value go into an "Other" section (edge case - items should always have a Group, but fallback if somehow missing)
+
 **Surface Areas (all must render the view switcher):**
 - [ ] Send for Signature - order table view
 - [ ] Add to Order modal (when "Create New Order" selected)
@@ -137,6 +145,7 @@ See Figma:
 1. Core Flow - View switching between all four modes
 2. Adding Items in a Group - Bulk add by Group value
 3. Adding Items in a Subcategory - Bulk add by Subcategory value
+4. Empty State - By Group and By Subcategory with no items
 
 **Interactive Prototype:** https://auto-organize-groups.vercel.app/albi-orders/wo_po_prototype/orders.html
 
