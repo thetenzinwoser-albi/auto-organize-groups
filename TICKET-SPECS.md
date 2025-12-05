@@ -139,22 +139,33 @@ A new component for adding items in bulk within the By Group and By Subcategory 
 ### Acceptance Criteria
 
 **UI Components:**
-- [ ] Dropdown to select method: "One item at a time", "All items in Group", "All items in Subcategory"
-- [ ] Secondary dropdown that changes based on selection:
-  - One item: Shows individual items
-  - All in Group: Shows list of groups with counts (e.g., "Kitchen (15 items)")
-  - All in Subcategory: Shows list of subcategories with counts (e.g., "Labor (50 items)")
-- [ ] Preview text showing how many items will be added
-- [ ] Add button to execute
-- [ ] Label updates dynamically ("Select item:" / "Select group:" / "Select subcategory:")
+- [ ] "Add items" dropdown to select method: "One item at a time", "All items in Group", "All items in Subcategory"
+- [ ] Secondary dropdown - label and contents change based on method selected:
 
-**Add Flow:**
+| Method Selected | Dropdown Label | Dropdown Contents |
+|-----------------|----------------|-------------------|
+| One item at a time | "Select item:" | Searchable list of all items not yet in the order |
+| All items in Group | "Select group:" | List of groups that have items not yet in the order, with counts (e.g., "Kitchen (7 items)") |
+| All items in Subcategory | "Select subcategory:" | List of subcategories that have items not yet in the order, with counts (e.g., "Material (8 items)") |
+
+- [ ] Preview/status text area below the dropdowns
+- [ ] "+ Add to Order" button to execute
+
+**Add Flow (for "All items in Group" or "All items in Subcategory"):**
 1. [ ] User selects add method from dropdown
-2. [ ] User selects specific value from secondary dropdown
-3. [ ] Preview shows item count (e.g., "5 Kitchen items will be added")
-4. [ ] User clicks Add
-5. [ ] Items are added and auto-organized into appropriate sections
-6. [ ] Success state displays briefly in the preview area
+2. [ ] User selects specific group/subcategory from secondary dropdown
+3. [ ] **Preview state:** Text appears below dropdowns with arrow icon: "{X} {Group/Subcategory name} items will be added" (e.g., "8 Material items will be added")
+4. [ ] User clicks "+ Add to Order"
+5. [ ] **Loading state:** Arrow icon changes to loading spinner, text remains the same
+6. [ ] Items are added and auto-organized into appropriate sections
+7. [ ] **Success state:** Spinner changes to checkmark icon, text updates to "{X} {Group/Subcategory name} items added" (e.g., "8 Material items added")
+8. [ ] Success state displays briefly then resets
+
+**Add Flow (for "One item at a time"):**
+1. [ ] User selects "One item at a time" from dropdown
+2. [ ] User searches/selects specific item from secondary dropdown
+3. [ ] User clicks "+ Add to Order"
+4. [ ] Item is added to the appropriate section based on its Group/Subcategory value
 
 **Error State:**
 - [ ] If adding items fails, display inline error: "There was an error adding your items, please try again."
@@ -224,6 +235,7 @@ P2/P3 - Fast-follow after core auto-organize functionality proves value
 3. Adding Items in a Subcategory - Bulk add by Subcategory value
 4. Empty State - By Group and By Subcategory with no items
 5. Error State - Failed to add items
+6. Add Items States - Preview (arrow icon), Loading (spinner), Success (checkmark)
 
 **Interactive Prototype:** https://auto-organize-groups.vercel.app/albi-orders/wo_po_prototype/orders.html
 
