@@ -76,6 +76,10 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] "Other" section is placed at the bottom by default (not alphabetized with other sections)
 - [ ] "Other" section can be manually reordered like any other section
 
+**View Mode Persistence:**
+- [ ] View mode persists when saving and closing the order
+- [ ] Reopening the order restores the last-used view mode
+
 **Surface Areas (all must render the view switcher):**
 - [ ] Send for Signature - order table view
 - [ ] Add to Order modal (when "Create New Order" selected)
@@ -234,6 +238,14 @@ P2/P3 - Fast-follow after core auto-organize functionality proves value
 ### Adding to Existing Order
 - [ ] Items trickle into correct sections based on order's organization mode
 - [ ] New sections auto-created when needed
+
+### PDF Generation
+Ensure the existing PDF generation continues to work correctly with all view modes:
+- [ ] PDF reflects the correct section organization (Flat List, Custom Sections, By Group, By Subcategory)
+- [ ] PDF reflects the correct section order (including any manual reordering)
+- [ ] PDF reflects the correct item order within sections
+- [ ] Section totals appear correctly when "Show section total" is enabled
+- [ ] No changes to PDF generation logic should be needed - this is validation that existing functionality still works
 
 ---
 
