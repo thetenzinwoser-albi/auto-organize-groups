@@ -28,6 +28,8 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] Section names match the Group/Subcategory value
 - [ ] Sections are collapsible
 - [ ] "Show section total" toggle available per section
+- [ ] Default section order is alphabetical
+- [ ] Users can drag-and-drop sections to reorder them
 
 **Surface Areas (all must render the view switcher):**
 - [ ] Send for Signature - order table view
@@ -41,6 +43,36 @@ See Figma: **Core Flow** (Row 1) - 5 screens showing view switching progression
 ### Out of Scope
 - Add Items By experience (Ticket 2)
 - Changes to Flat List or Custom Sections behavior
+
+### Grooming Discussion: View Switching State Management
+
+**Context:** Today's Flat List <-> Custom Sections toggle preserves state when switching between modes. The existing behavior:
+
+- **Sections OFF -> ON:** Restores last-known section membership and section order
+- **Sections ON -> OFF:** Flattens to single list but remembers section membership for future restore
+- Membership only changes when sections are ON; flat reordering doesn't affect saved membership
+
+**Ideal UX for the new modes:**
+
+Each view mode (Flat List, Custom Sections, By Group, By Subcategory) would independently remember its state:
+- By Group remembers any manual section reordering
+- By Subcategory remembers any manual section reordering
+- Switching between modes and back preserves your work
+
+**Scenarios to consider:**
+
+| From | To | Back to original | Ideal behavior |
+|------|----|------------------|----------------|
+| By Group (reordered) | Custom Sections | By Group | Remembers reordered section order |
+| By Group (reordered) | By Subcategory | By Group | Remembers reordered section order |
+| By Group (reordered) | Flat List | By Group | Remembers reordered section order |
+| By Subcategory (reordered) | Any other view | By Subcategory | Remembers reordered section order |
+| Custom Sections | By Group | Custom Sections | Remembers custom sections structure |
+
+**Discussion points for grooming:**
+1. What are the trade-offs of implementing independent remembered state for By Group and By Subcategory?
+2. Is this feasible within the current data model, or does it require significant changes?
+3. If too complex, fallback could be: switching away from a reordered auto-organized view resets to alphabetical (with a warning)
 
 ---
 
