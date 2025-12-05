@@ -35,6 +35,21 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] If an edit creates a new Group/Subcategory value, a new section is created for it
 - [ ] If an edit or deletion leaves a section empty, that section is removed (By Group and By Subcategory only - Custom Sections retains empty sections)
 
+**Item Reordering:**
+- [ ] Users can drag-and-drop items to reorder within a section (all section-based views)
+- [ ] Users can drag-and-drop items to reorder in Flat List view
+- [ ] Flat List order is preserved when switching between views
+
+**Moving Items Between Sections (drag-and-drop):**
+- [ ] Custom Sections: Dragging an item to a different section changes its section membership
+- [ ] By Group: Dragging an item to a different section updates the item's Group value
+- [ ] By Subcategory: Dragging an item to a different section updates the item's Subcategory value
+- [ ] All changes are pending until the user saves the modal
+
+**Adding/Removing Items Across Views:**
+- [ ] Adding an item places it at the bottom of the Flat List order
+- [ ] Removing an item removes it from all views
+
 **Empty State:**
 - [ ] When no items exist, show "Add items to this order to see them here." placeholder
 - [ ] Add Items component remains visible and functional in empty state
