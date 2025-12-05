@@ -48,6 +48,9 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 
 **Adding/Removing Items Across Views:**
 - [ ] Removing an item removes it from all views
+- [ ] Removing a section removes all items in that section from all views
+- [ ] Removed items are still available in the Items list to be added back to the order
+- [ ] All removals are pending until the user saves the modal
 
 **Where new items appear when switching views:**
 
