@@ -47,8 +47,16 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] All changes are pending until the user saves the modal
 
 **Adding/Removing Items Across Views:**
-- [ ] Adding an item places it at the bottom of the Flat List order
 - [ ] Removing an item removes it from all views
+
+**Where new items appear when switching views:**
+
+| Add item in... | Switch to Flat List | Switch to By Group / By Subcategory | Switch to Custom Sections |
+|----------------|---------------------|-------------------------------------|---------------------------|
+| Flat List | N/A | Item goes to its matching Group/Subcategory section | Existing behavior (do not change) |
+| Custom Sections | Existing behavior (do not change) | Item goes to its matching Group/Subcategory section | N/A |
+| By Group | Bottom of flat list (can be reordered) | Item goes to its matching section | Existing behavior (do not change) |
+| By Subcategory | Bottom of flat list (can be reordered) | Item goes to its matching section | Existing behavior (do not change) |
 
 **Empty State:**
 - [ ] When no items exist, show "Add items to this order to see them here." placeholder
