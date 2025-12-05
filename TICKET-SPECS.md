@@ -111,6 +111,12 @@ A new component for adding items in bulk within the By Group and By Subcategory 
 5. [ ] Items are added and auto-organized into appropriate sections
 6. [ ] Success state displays briefly in the preview area
 
+**Error State:**
+- [ ] If adding items fails, display inline error: "There was an error adding your items, please try again."
+- [ ] Error displays in same location as preview/success text (red background, error icon)
+- [ ] Error dismisses on any click inside the Add Items component or modal footer (Add to Order, Save, Cancel, dropdowns, view switcher)
+- [ ] No auto-dismiss timeout - error persists until user interaction
+
 **Integration - Adding to Existing Order:**
 - [ ] When adding items to an order organized "By Group", items trickle into sections matching their Group field
 - [ ] When adding items to an order organized "By Subcategory", items trickle into sections matching their Subcategory field
@@ -148,6 +154,7 @@ See Figma:
 2. Adding Items in a Group - Bulk add by Group value
 3. Adding Items in a Subcategory - Bulk add by Subcategory value
 4. Empty State - By Group and By Subcategory with no items
+5. Error State - Failed to add items
 
 **Interactive Prototype:** https://auto-organize-groups.vercel.app/albi-orders/wo_po_prototype/orders.html
 
