@@ -140,7 +140,7 @@ This decision should align with the section order decision - if we preserve sect
 ## Ticket 2: Add Items By Experience
 
 ### Summary
-A new component for adding items in bulk within the By Group and By Subcategory views.
+A new component for adding items in bulk. **Only visible in By Group and By Subcategory views** (not in Flat List or Custom Sections).
 
 ### Acceptance Criteria
 
