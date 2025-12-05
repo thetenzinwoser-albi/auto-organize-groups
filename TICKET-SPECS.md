@@ -48,9 +48,14 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 
 **Adding/Removing Items Across Views:**
 - [ ] Removing an item removes it from all views
-- [ ] Removing a section removes all items in that section from all views
 - [ ] Removed items are still available in the Items list to be added back to the order
-- [ ] All removals are pending until the user saves the modal
+- [ ] All removals are pending until the user saves the modal (Cancel restores removed items)
+
+**Deleting Sections:**
+- [ ] Deleting a section removes all items in that section from the order (applies to Custom Sections, By Group, and By Subcategory)
+- [ ] In By Group / By Subcategory, deleting a section is a bulk action to remove all items with that Group/Subcategory value
+- [ ] Deleted items are still available in the Items list to be added back
+- [ ] Section deletion is pending until save (Cancel restores the section and its items)
 
 **Where new items appear when switching views:**
 
