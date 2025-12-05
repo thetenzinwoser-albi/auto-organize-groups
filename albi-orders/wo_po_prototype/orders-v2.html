@@ -1654,6 +1654,7 @@
                     <button class="view-tab active" data-view="flat" onclick="switchView('flat')">Flat List</button>
                     <button class="view-tab" data-view="custom" onclick="switchView('custom')">Custom Sections</button>
                     <button class="view-tab" data-view="group" onclick="switchView('group')">By Group</button>
+                    <button class="view-tab" data-view="subcategory" onclick="switchView('subcategory')">By Subcategory</button>
                 </div>
 
                 <!-- Modal Content Container (will be dynamically populated based on view) -->
@@ -1783,7 +1784,7 @@
         let currentMainTab = 'items';
 
         // Modal view state
-        let currentView = 'flat'; // 'flat', 'custom', 'group' (Phase 1) - 'subcategory' view is Phase 2
+        let currentView = 'flat'; // 'flat', 'custom', 'group', 'subcategory'
         let customSections = []; // Array of { id, name, showTotal, itemIds: [] }
         let sectionOrder = []; // Array of section IDs for ordering
         let nextSectionId = 1;
