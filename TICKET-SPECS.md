@@ -119,6 +119,16 @@ Each view mode (Flat List, Custom Sections, By Group, By Subcategory) would inde
 2. Is this feasible within the current data model, or does it require significant changes?
 3. If too complex, fallback could be: switching away from a reordered auto-organized view resets to alphabetical (with a warning)
 
+**Item order within sections:**
+
+In addition to section order, should item order within sections be preserved when switching views?
+
+- If user reorders items within the Kitchen section in By Group view, then switches to Flat List and back to By Group, is that item order preserved?
+- Ideal: Yes, preserve item order within sections
+- Fallback: Reset to default order (e.g., by date added) with a warning when switching views if items were reordered
+
+This decision should align with the section order decision - if we preserve section order, we should also preserve item order within sections. If we reset section order, we should also reset item order.
+
 ---
 
 ## Ticket 2: Add Items By Experience
