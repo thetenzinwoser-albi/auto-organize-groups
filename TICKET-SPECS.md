@@ -38,6 +38,8 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 **Handling Missing Values:**
 - [ ] **By Subcategory:** Items without a Subcategory value go into an "Other" section
 - [ ] **By Group:** Items without a Group value go into an "Other" section (edge case - items should always have a Group, but fallback if somehow missing)
+- [ ] "Other" section is placed at the bottom by default (not alphabetized with other sections)
+- [ ] "Other" section can be manually reordered like any other section
 
 **Surface Areas (all must render the view switcher):**
 - [ ] Send for Signature - order table view
