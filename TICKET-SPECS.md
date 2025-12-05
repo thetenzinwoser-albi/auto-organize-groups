@@ -36,6 +36,8 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] **In By Subcategory view:** Subcategory field is dropdown-only (no free-text). User can select from existing Subcategories but cannot create new Subcategories. To create a new Subcategory, switch to Flat List or Custom Sections.
 - [ ] If an item is moved to a Group/Subcategory that doesn't have a section in this order yet, a new section is created for it
 - [ ] **New section placement:** New sections appear at the top of the section list (easy to spot, no scrolling needed). User can drag to reorder if needed.
+- [ ] **Multiple new sections:** If adding items creates multiple new sections at once, they appear at the top in alphabetical order among themselves
+- [ ] **New items within existing sections:** When items are added to an existing section, they appear at the top of that section
 - [ ] If an edit or deletion leaves a section empty, that section is removed (By Group and By Subcategory only - Custom Sections retains empty sections)
 
 **Item Reordering:**
@@ -80,6 +82,7 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] "Other" section can be manually reordered like any other section
 
 **View Mode Persistence:**
+- [ ] Default view mode for new orders is Flat List
 - [ ] View mode persists when saving and closing the order
 - [ ] Reopening the order restores the last-used view mode
 
