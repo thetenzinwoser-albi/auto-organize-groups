@@ -151,7 +151,7 @@ A new component for adding items in bulk. **Only visible in By Group and By Subc
 
 | Method Selected | Dropdown Label | Dropdown Contents |
 |-----------------|----------------|-------------------|
-| One item at a time | "Select item:" | Searchable list of items not yet used in this order or any other order. Format: "{Item name} ({Group} - {Subcategory})" e.g., "Drywall (Kitchen - Labor)". Search matches item name, group, or subcategory. |
+| One item at a time | "Select item:" | Searchable list of items not yet used in this order or any other order. Format: "{Item name} ({Group} - {Subcategory})" e.g., "Drywall (Kitchen - Labor)". Search matches item name, group, or subcategory. Shows first ~25 items by default; user types to search/filter for more (follows existing pagination behavior). |
 | All items in Group | "Select group:" | List of groups that have available items, with counts (e.g., "Kitchen (7 items)"). Only shows groups with items not used in this or other orders. |
 | All items in Subcategory | "Select subcategory:" | List of subcategories that have available items, with counts (e.g., "Material (8 items)"). Only shows subcategories with items not used in this or other orders. |
 
