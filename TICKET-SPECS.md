@@ -6,10 +6,10 @@ Enable users to automatically organize work order items by Group or Subcategory,
 
 ---
 
-## Ticket 1: View Toggle Component
+## Ticket 1a: View Switcher + Basic Auto-Organization
 
 ### Summary
-Replace the current flat list / custom sections toggle with a view switcher supporting four modes.
+Replace the current flat list / custom sections toggle with a view switcher supporting four modes, with basic auto-organization display for By Group and By Subcategory.
 
 ### Acceptance Criteria
 
@@ -21,65 +21,21 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 | By Group | Auto-creates sections based on item's Group field |
 | By Subcategory | Auto-creates sections based on item's Subcategory field |
 
-**Behavior for By Group / By Subcategory:**
+**Basic Auto-Organization (By Group / By Subcategory):**
 - [ ] Automatically identifies unique values in the Group or Subcategory field
 - [ ] Creates a section for each unique value
 - [ ] Places items into their corresponding section
 - [ ] Section names match the Group/Subcategory value
 - [ ] "Show section total" toggle available per section
 - [ ] Default section order is alphabetical
-- [ ] Users can drag-and-drop sections to reorder them
-- [ ] Users can inline edit items in all views
-- [ ] Editing an item's Group value in By Group view moves the item to the matching section
-- [ ] Editing an item's Subcategory value in By Subcategory view moves the item to the matching section
-- [ ] **In By Group view:** Group field is dropdown-only (no free-text). User can select from existing Groups but cannot create new Groups. To create a new Group, switch to Flat List or Custom Sections.
-- [ ] **In By Subcategory view:** Subcategory field is dropdown-only (no free-text). User can select from existing Subcategories but cannot create new Subcategories. To create a new Subcategory, switch to Flat List or Custom Sections.
-- [ ] If an item is moved to a Group/Subcategory that doesn't have a section in this order yet, a new section is created for it
-- [ ] **New section placement:** New sections appear at the top of the section list (easy to spot, no scrolling needed). User can drag to reorder if needed.
-- [ ] **Multiple new sections:** If adding items creates multiple new sections at once, they appear at the top in alphabetical order among themselves
-- [ ] **New items within existing sections:** When items are added to an existing section, they appear at the top of that section
-- [ ] If an edit or deletion leaves a section empty, that section is removed (By Group and By Subcategory only - Custom Sections retains empty sections)
-
-**Item Reordering:**
-- [ ] Users can drag-and-drop items to reorder within a section (all section-based views)
-- [ ] Users can drag-and-drop items to reorder in Flat List view
-- [ ] Flat List order is preserved when switching between views
-
-**Moving Items Between Sections (drag-and-drop):**
-- [ ] Custom Sections: Dragging an item to a different section changes its section membership
-- [ ] By Group: Dragging an item to a different section updates the item's Group value
-- [ ] By Subcategory: Dragging an item to a different section updates the item's Subcategory value
-- [ ] All changes are pending until the user saves the modal
-
-**Adding/Removing Items Across Views:**
-- [ ] Removing an item removes it from all views
-- [ ] Removed items are still available in the Items list to be added back to the order
-- [ ] All removals are pending until the user saves the modal (Cancel restores removed items)
-
-**Deleting Sections:**
-- [ ] Deleting a section removes all items in that section from the order (applies to Custom Sections, By Group, and By Subcategory)
-- [ ] In By Group / By Subcategory, deleting a section is a bulk action to remove all items with that Group/Subcategory value
-- [ ] Deleted items are still available in the Items list to be added back
-- [ ] Section deletion is pending until save (Cancel restores the section and its items)
-
-**Where new items appear when switching views:**
-
-| Add item in... | Switch to Flat List | Switch to By Group / By Subcategory | Switch to Custom Sections |
-|----------------|---------------------|-------------------------------------|---------------------------|
-| Flat List | N/A | Item goes to its matching Group/Subcategory section | Existing behavior (do not change) |
-| Custom Sections | Existing behavior (do not change) | Item goes to its matching Group/Subcategory section | N/A |
-| By Group | Bottom of flat list (can be reordered) | Item goes to its matching section | Existing behavior (do not change) |
-| By Subcategory | Bottom of flat list (can be reordered) | Item goes to its matching section | Existing behavior (do not change) |
 
 **Empty State:**
 - [ ] When no items exist, show "Add items to this order to see them here." placeholder
-- [ ] Add Items component remains visible and functional in empty state
 
 **Handling Missing Values:**
 - [ ] **By Subcategory:** Items without a Subcategory value go into an "Other" section
 - [ ] **By Group:** Items without a Group value go into an "Other" section (edge case - items should always have a Group, but fallback if somehow missing)
 - [ ] "Other" section is placed at the bottom by default (not at top like named sections - it's a catch-all, not an active addition)
-- [ ] "Other" section can be manually reordered like any other section
 
 **View Mode Persistence:**
 - [ ] Default view mode for new orders is Flat List
@@ -96,8 +52,76 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 See Figma: **Core Flow** (Row 1) - 5 screens showing view switching progression
 
 ### Out of Scope
+- Section/item reordering and interactions (Ticket 1b)
 - Add Items By experience (Ticket 2)
 - Changes to Flat List or Custom Sections behavior
+
+### What Ships
+Users can switch between four view modes and see their items auto-organized by Group or Subcategory. Read-only organization - no reordering or manipulation yet.
+
+---
+
+## Ticket 1b: Section & Item Interactions
+
+### Summary
+Add the ability to reorder, manipulate, and interact with sections and items in all views, with special behaviors for By Group and By Subcategory.
+
+### Acceptance Criteria
+
+**Section Reordering:**
+- [ ] Users can drag-and-drop sections to reorder them
+- [ ] "Other" section can be manually reordered like any other section
+
+**Item Reordering:**
+- [ ] Users can drag-and-drop items to reorder within a section (all section-based views)
+- [ ] Users can drag-and-drop items to reorder in Flat List view
+- [ ] Flat List order is preserved when switching between views
+
+**Moving Items Between Sections (drag-and-drop):**
+- [ ] Custom Sections: Dragging an item to a different section changes its section membership
+- [ ] By Group: Dragging an item to a different section updates the item's Group value
+- [ ] By Subcategory: Dragging an item to a different section updates the item's Subcategory value
+- [ ] All changes are pending until the user saves the modal
+
+**Inline Editing:**
+- [ ] Users can inline edit items in all views
+- [ ] Editing an item's Group value in By Group view moves the item to the matching section
+- [ ] Editing an item's Subcategory value in By Subcategory view moves the item to the matching section
+- [ ] **In By Group view:** Group field is dropdown-only (no free-text). User can select from existing Groups but cannot create new Groups. To create a new Group, switch to Flat List or Custom Sections.
+- [ ] **In By Subcategory view:** Subcategory field is dropdown-only (no free-text). User can select from existing Subcategories but cannot create new Subcategories. To create a new Subcategory, switch to Flat List or Custom Sections.
+
+**New Section Creation:**
+- [ ] If an item is moved to a Group/Subcategory that doesn't have a section in this order yet, a new section is created for it
+- [ ] **New section placement:** New sections appear at the top of the section list (easy to spot, no scrolling needed). User can drag to reorder if needed.
+- [ ] **Multiple new sections:** If adding items creates multiple new sections at once, they appear at the top in alphabetical order among themselves
+- [ ] **New items within existing sections:** When items are added to an existing section, they appear at the top of that section
+- [ ] If an edit or deletion leaves a section empty, that section is removed (By Group and By Subcategory only - Custom Sections retains empty sections)
+
+**Deleting Sections:**
+- [ ] Deleting a section removes all items in that section from the order (applies to Custom Sections, By Group, and By Subcategory)
+- [ ] In By Group / By Subcategory, deleting a section is a bulk action to remove all items with that Group/Subcategory value
+- [ ] Deleted items are still available in the Items list to be added back
+- [ ] Section deletion is pending until save (Cancel restores the section and its items)
+
+**Adding/Removing Items Across Views:**
+- [ ] Removing an item removes it from all views
+- [ ] Removed items are still available in the Items list to be added back to the order
+- [ ] All removals are pending until the user saves the modal (Cancel restores removed items)
+
+**Where new items appear when switching views:**
+
+| Add item in... | Switch to Flat List | Switch to By Group / By Subcategory | Switch to Custom Sections |
+|----------------|---------------------|-------------------------------------|---------------------------|
+| Flat List | N/A | Item goes to its matching Group/Subcategory section | Existing behavior (do not change) |
+| Custom Sections | Existing behavior (do not change) | Item goes to its matching Group/Subcategory section | N/A |
+| By Group | Bottom of flat list (can be reordered) | Item goes to its matching section | Existing behavior (do not change) |
+| By Subcategory | Bottom of flat list (can be reordered) | Item goes to its matching section | Existing behavior (do not change) |
+
+### Design Reference
+See Figma: **Core Flow** (Row 1) - interactions within the views
+
+### Dependencies
+- Ticket 1a (View Switcher + Basic Auto-Organization) must be complete
 
 ### Grooming Discussion: View Switching State Management
 
@@ -138,6 +162,9 @@ In addition to section order, should item order within sections be preserved whe
 - Fallback: Reset to default order (e.g., by date added) with a warning when switching views if items were reordered
 
 This decision should align with the section order decision - if we preserve section order, we should also preserve item order within sections. If we reset section order, we should also reset item order.
+
+### What Ships
+Users can reorder sections and items, drag items between sections, delete sections, and have full manipulation capabilities in all views.
 
 ---
 
@@ -206,7 +233,10 @@ See Figma:
 - **Adding Items in a Subcategory** (Row 3) - 6 screens showing subcategory-based add flow
 
 ### Dependencies
-- Ticket 1 (View Toggle Component) must be complete
+- Ticket 1a (View Switcher + Basic Auto-Organization) must be complete
+
+### What Ships
+Users can bulk-add items by Group or Subcategory with a streamlined Add Items component.
 
 ---
 
@@ -230,7 +260,7 @@ Each section header would include:
 P2/P3 - Fast-follow after core auto-organize functionality proves value
 
 ### Dependencies
-- Ticket 1 (View Toggle Component) must be complete
+- Ticket 1b (Section & Item Interactions) must be complete
 
 ---
 
