@@ -58,6 +58,17 @@ A new component for adding items in bulk within the By Group and By Subcategory 
 4. User confirms
 5. Items are added and auto-organized into appropriate sections
 
+## Surface Areas
+
+The following entry points render the order table and will be impacted by the auto-organize behavior:
+
+| Entry Point | Context |
+|-------------|---------|
+| **Send for Signature** | Renders the order table when sending an order for signature |
+| **Add to Order (Create New)** | Pressing "Add to Order" on Items tab, then selecting "Create New Order" in the modal |
+| **Create Work Order** | Pressing "Create Work Order" on the Orders tab |
+| **Edit Order** | Pressing "Edit" on an existing order |
+
 ## Integration Points
 
 ### Add to Order (from Items Table)
@@ -70,6 +81,21 @@ When adding items to an existing order that has a view mode set:
 When viewing an order:
 - Section names should accurately reflect the Group/Subcategory
 - Section order should be maintained as configured
+
+## Post-Release Validation
+
+### Viewing an Order (Side Drawer)
+When viewing an order, the side drawer should:
+- Render section names correctly based on the order's organization mode
+- Display sections in the correct order
+- Properly reflect Group or Subcategory names if auto-sectioned
+
+### Adding to an Existing Order
+When pressing "Add to Order" and selecting an existing order:
+- Items should trickle into the respective sections based on the order's organization mode
+- If the order is organized by Group, new items go into sections matching their Group field
+- If the order is organized by Subcategory, new items go into sections matching their Subcategory field
+- New sections should be created automatically if an item's Group/Subcategory doesn't match an existing section
 
 ## Future Considerations
 
