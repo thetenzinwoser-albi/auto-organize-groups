@@ -35,6 +35,7 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] **In By Group view:** Group field is dropdown-only (no free-text). User can select from existing Groups but cannot create new Groups. To create a new Group, switch to Flat List or Custom Sections.
 - [ ] **In By Subcategory view:** Subcategory field is dropdown-only (no free-text). User can select from existing Subcategories but cannot create new Subcategories. To create a new Subcategory, switch to Flat List or Custom Sections.
 - [ ] If an item is moved to a Group/Subcategory that doesn't have a section in this order yet, a new section is created for it
+- [ ] **New section placement:** New sections appear at the top of the section list (easy to spot, no scrolling needed). User can drag to reorder if needed.
 - [ ] If an edit or deletion leaves a section empty, that section is removed (By Group and By Subcategory only - Custom Sections retains empty sections)
 
 **Item Reordering:**
@@ -75,7 +76,7 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 **Handling Missing Values:**
 - [ ] **By Subcategory:** Items without a Subcategory value go into an "Other" section
 - [ ] **By Group:** Items without a Group value go into an "Other" section (edge case - items should always have a Group, but fallback if somehow missing)
-- [ ] "Other" section is placed at the bottom by default (not alphabetized with other sections)
+- [ ] "Other" section is placed at the bottom by default (not at top like named sections - it's a catch-all, not an active addition)
 - [ ] "Other" section can be manually reordered like any other section
 
 **View Mode Persistence:**
