@@ -32,7 +32,9 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] Users can inline edit items in all views
 - [ ] Editing an item's Group value in By Group view moves the item to the matching section
 - [ ] Editing an item's Subcategory value in By Subcategory view moves the item to the matching section
-- [ ] If an edit creates a new Group/Subcategory value, a new section is created for it
+- [ ] **In By Group view:** Group field is dropdown-only (no free-text). User can select from existing Groups but cannot create new Groups. To create a new Group, switch to Flat List or Custom Sections.
+- [ ] **In By Subcategory view:** Subcategory field is dropdown-only (no free-text). User can select from existing Subcategories but cannot create new Subcategories. To create a new Subcategory, switch to Flat List or Custom Sections.
+- [ ] If an item is moved to a Group/Subcategory that doesn't have a section in this order yet, a new section is created for it
 - [ ] If an edit or deletion leaves a section empty, that section is removed (By Group and By Subcategory only - Custom Sections retains empty sections)
 
 **Item Reordering:**
