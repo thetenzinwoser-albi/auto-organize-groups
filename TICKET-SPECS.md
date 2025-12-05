@@ -136,6 +136,30 @@ See Figma:
 
 ---
 
+## Ticket 3: Section Reordering Controls (Future - Low Priority)
+
+### Summary
+Add arrow controls and menu options for reordering sections, improving the experience when there are many sections (20+).
+
+### Motivation
+Drag-and-drop works well for 5-10 sections, but becomes tedious with large group counts. Arrow controls provide more precise positioning and better accessibility.
+
+### Proposed UI
+Each section header would include:
+- **Up/Down arrows** - Move section one position up or down
+- **Overflow menu (...)** - "Move to top" / "Move to bottom" options
+
+### Scope
+- Applies to all section-based views: Custom Sections, By Group, By Subcategory
+
+### Priority
+P2/P3 - Fast-follow after core auto-organize functionality proves value
+
+### Dependencies
+- Ticket 1 (View Toggle Component) must be complete
+
+---
+
 ## Post-Release Validation Checklist
 
 ### Viewing an Order (Side Drawer)
