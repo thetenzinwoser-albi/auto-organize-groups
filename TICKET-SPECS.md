@@ -29,6 +29,11 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] "Show section total" toggle available per section
 - [ ] Default section order is alphabetical
 - [ ] Users can drag-and-drop sections to reorder them
+- [ ] Users can inline edit items in all views
+- [ ] Editing an item's Group value in By Group view moves the item to the matching section
+- [ ] Editing an item's Subcategory value in By Subcategory view moves the item to the matching section
+- [ ] If an edit creates a new Group/Subcategory value, a new section is created for it
+- [ ] If an edit or deletion leaves a section empty, that section is removed
 
 **Empty State:**
 - [ ] When no items exist, show "Add items to this order to see them here." placeholder
