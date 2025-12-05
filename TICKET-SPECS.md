@@ -33,7 +33,7 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] Editing an item's Group value in By Group view moves the item to the matching section
 - [ ] Editing an item's Subcategory value in By Subcategory view moves the item to the matching section
 - [ ] If an edit creates a new Group/Subcategory value, a new section is created for it
-- [ ] If an edit or deletion leaves a section empty, that section is removed
+- [ ] If an edit or deletion leaves a section empty, that section is removed (By Group and By Subcategory only - Custom Sections retains empty sections)
 
 **Empty State:**
 - [ ] When no items exist, show "Add items to this order to see them here." placeholder
