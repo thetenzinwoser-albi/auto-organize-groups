@@ -26,7 +26,6 @@ Replace the current flat list / custom sections toggle with a view switcher supp
 - [ ] Creates a section for each unique value
 - [ ] Places items into their corresponding section
 - [ ] Section names match the Group/Subcategory value
-- [ ] Sections are collapsible
 - [ ] "Show section total" toggle available per section
 - [ ] Default section order is alphabetical
 - [ ] Users can drag-and-drop sections to reorder them
